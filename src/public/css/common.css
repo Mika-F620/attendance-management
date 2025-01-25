@@ -124,3 +124,14 @@ body {
 .form__error {
   color: #ff0000;
 }
+
+.pageTitle {
+  font-size: 3rem;
+  font-weight: bold;
+  border-left: 8px solid #000000;
+  padding-left: 21px;
+}
+
+.grayBg {
+  background-color: #f0eff2;
+}

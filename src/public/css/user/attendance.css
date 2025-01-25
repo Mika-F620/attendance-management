@@ -1,0 +1,73 @@
+@charset "utf-8";
+
+.checkIn {
+  display: flex;
+  flex-direction: column;
+  gap: 87px;
+  align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+  .checkIn {
+    gap: 56px;
+  }
+}
+
+.checkIn__contents {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+}
+
+@media screen and (max-width: 480px) {
+  .checkIn__contents {
+    gap: 24px;
+  }
+}
+
+.checkIn__label {
+  background-color: #c8c8c8;
+  font-size: 1.8rem;
+  color: #696969;
+  font-weight: bold;
+  padding: 9px 20px;
+  margin: 0;
+  border-radius: 50px;
+}
+
+.checkIn__date {
+  font-size: 4rem;
+  color: #000000;
+  margin: 0;
+}
+
+@media screen and (max-width: 480px) {
+  .checkIn__date {
+    font-size: 3.2rem;
+  }
+}
+
+.checkIn__time {
+  font-size: 8rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+@media screen and (max-width: 480px) {
+  .checkIn__time {
+    font-size: 4rem;
+  }
+}
+
+.checkIn__btn {
+  font-size: 3.2rem;
+  padding: 19px 76px;
+  border-radius: 20px;
+}
+
+@media screen and (max-width: 480px) {
+  .checkIn__btn {
+    font-size: 2.4rem;
+  }
+}
