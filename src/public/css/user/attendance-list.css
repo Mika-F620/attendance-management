@@ -10,6 +10,12 @@
   margin-bottom: 46px;
 }
 
+@media screen and (max-width: 480px) {
+  .attendanceList__pagination {
+    padding: 14px;
+  }
+}
+
 .attendanceList__paginationLeft {
   margin: 0;
   font-size: 1.6rem;
@@ -27,6 +33,12 @@
   display: flex;
   align-items: center;
   gap: 11px;
+}
+
+@media screen and (max-width: 480px) {
+  .attendanceList__paginationCenter {
+    font-size: 1.8rem;
+  }
 }
 
 .attendanceList__paginationRight {
@@ -63,6 +75,12 @@
   text-align: center;
   padding: 14px 0;
   border-bottom: 2px solid #e1e1e1;
+}
+
+@media screen and (max-width: 480px) {
+  .attendanceList__detail {
+    font-size: 1.4rem;
+  }
 }
 
 .attendanceList__detail:last-child {

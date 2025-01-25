@@ -132,6 +132,12 @@ body {
   padding-left: 21px;
 }
 
+@media screen and (max-width: 768px) {
+  .pageTitle {
+    font-size: 2.4rem;
+  }
+}
+
 .grayBg {
   background-color: #f0eff2;
 }
