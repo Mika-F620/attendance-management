@@ -42,3 +42,7 @@ Route::get('stamp_correction_request/list', function () {
 
     return view('stamp_correction_request.list');  // ビューを表示
 });
+
+Route::get('admin/login', function () {
+    return view('auth.admin.login');
+});
