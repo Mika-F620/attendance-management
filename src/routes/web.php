@@ -28,3 +28,10 @@ Route::get('attendance', function () {
 Route::get('attendance/list', function () {
     return view('attendance.list');
 });
+
+Route::get('attendance/{id}', function ($id) {
+    // ユーザーID（$id）に基づいて勤怠情報を取得する処理（例えば、DBから取得）
+    // 例: $attendance = Attendance::find($id);
+
+    return view('attendance.show', compact('id'));  // ビューにIDを渡す
+});
