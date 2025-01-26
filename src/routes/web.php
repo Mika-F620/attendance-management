@@ -35,3 +35,10 @@ Route::get('attendance/{id}', function ($id) {
 
     return view('attendance.show', compact('id'));  // ビューにIDを渡す
 });
+
+Route::get('stamp_correction_request/list', function () {
+    // 申請一覧データを取得する処理（例: データベースから申請情報を取得）
+    // 例: $requests = StampCorrectionRequest::all();
+
+    return view('stamp_correction_request.list');  // ビューを表示
+});
