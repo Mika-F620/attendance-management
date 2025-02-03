@@ -46,3 +46,10 @@ Route::get('stamp_correction_request/list', function () {
 Route::get('admin/login', function () {
     return view('auth.admin.login');
 });
+
+Route::get('admin/attendance/list', function () {
+    // 申請一覧データを取得する処理（例: データベースから申請情報を取得）
+    // 例: $requests = StampCorrectionRequest::all();
+
+    return view('admin.attendance.list');  // ビューを表示
+});
