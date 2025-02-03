@@ -60,3 +60,10 @@ Route::get('admin/staff/list', function () {
 
     return view('admin.staff.list');  // ビューを表示
 });
+
+Route::get('admin/attendance/staff/{id}', function ($id) {
+    // ユーザーID（$id）に基づいてスタッフの勤怠情報を取得する処理
+    // 例: $attendance = Attendance::where('user_id', $id)->get();
+
+    return view('admin.attendance.staff.show', compact('id'));  // ビューにIDを渡す
+});
