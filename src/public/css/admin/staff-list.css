@@ -1,0 +1,46 @@
+@charset "utf-8";
+
+.requestList__tab {
+  display: flex;
+}
+
+.requestList__tabList {
+  list-style-type: none;
+}
+
+.requestList__table {
+  background-color: #fff;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.requestList__title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #737373;
+  border-bottom: 3px solid #e1e1e1;
+  padding: 14px 0;
+}
+
+.requestList__detail {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #737373;
+  padding: 14px 0;
+  text-align: center;
+  border-bottom: 2px solid #e1e1e1;
+}
+
+@media screen and (max-width: 768px) {
+  .requestList__detail {
+    font-size: 1.4rem;
+  }
+}
+
+.requestList__line:last-child .requestList__detail {
+  border-bottom: none;
+}
+
+.requestList__detail:last-child {
+  color: #000000;
+}

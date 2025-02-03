@@ -53,3 +53,10 @@ Route::get('admin/attendance/list', function () {
 
     return view('admin.attendance.list');  // ビューを表示
 });
+
+Route::get('admin/staff/list', function () {
+    // 申請一覧データを取得する処理（例: データベースから申請情報を取得）
+    // 例: $requests = StampCorrectionRequest::all();
+
+    return view('admin.staff.list');  // ビューを表示
+});
