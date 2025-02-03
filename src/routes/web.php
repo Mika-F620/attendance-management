@@ -67,3 +67,10 @@ Route::get('admin/attendance/staff/{id}', function ($id) {
 
     return view('admin.attendance.staff.show', compact('id'));  // ビューにIDを渡す
 });
+
+Route::get('stamp_correction_request/approve/{attendance_correct_request}', function ($attendance_correct_request) {
+    // このIDを使って、関連するデータ（例：申請情報など）を取得
+    // 例: $request = AttendanceCorrectRequest::findOrFail($attendance_correct_request);
+
+    return view('stamp_correction_request.approve.show', compact('attendance_correct_request'));  // ビューにIDを渡す
+});
