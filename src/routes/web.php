@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Facades\Fortify;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,17 +15,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('register', function () {
-    return view('auth.register');
-});
+// Route::get('register', function () {
+//     return view('auth.register');
+// });
+
+// Route::middleware(['auth', 'verified'])->get('/attendance', function () {
+//     return view('attendance');
+// })->name('attendance');
+
+// メール認証用
+Route::get('email/verify', function () {
+    return view('auth.verify'); // メール認証画面
+})->name('verification.notice');
+
+Route::get('email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verification.verify');
+
+// 認証後、アクセスするページ
+Route::get('home', function () {
+    return redirect()->route('attendance'); // 直接attendanceページにリダイレクト
+})->middleware('verified')->name('home');
+
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::get('login', function () {
     return view('auth.login');
 });
 
-Route::get('attendance', function () {
+Route::middleware(['auth', 'verified'])->get('/attendance', function () {
     return view('attendance');
-});
+})->name('attendance');
+
 
 Route::get('attendance/list', function () {
     return view('attendance.list');

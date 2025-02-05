@@ -5,7 +5,7 @@
 @section('content')
   <section class="wrapper">
     <h2 class="sectionTitle">会員登録</h2>
-    <form class="register__form" action="" method="POST" novalidate>
+    <form class="register__form" action="{{ route('register') }}" method="POST" novalidate>
       @csrf
       <div class="register__formContents">
         <div class="register__item">
