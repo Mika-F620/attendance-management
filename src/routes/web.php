@@ -108,4 +108,11 @@ Route::get('stamp_correction_request/approve/{attendance_correct_request}', func
     return view('stamp_correction_request.approve.show', compact('attendance_correct_request'));  // ビューにIDを渡す
 });
 
-Route::get('attendance', [AttendanceController::class, 'show'])->middleware('auth');
+// 出勤画面の表示
+Route::middleware(['auth', 'verified'])->get('/attendance', [AttendanceController::class, 'show'])->name('attendance');
+
+Route::post('/start-work', [AttendanceController::class, 'startWork'])->name('start-work');
+Route::post('/start-rest', [AttendanceController::class, 'startRest'])->name('start-rest');
+Route::post('/end-work', [AttendanceController::class, 'endWork'])->name('end-work');
+// 休憩戻処理
+Route::post('/end-rest', [AttendanceController::class, 'endRest'])->name('end-rest');
