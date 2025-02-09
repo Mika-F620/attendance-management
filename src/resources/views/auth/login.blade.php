@@ -30,7 +30,7 @@
       </div>
       <div class="login__btn">
         <input class="blackBtn login__btnBlack" type="submit" value="ログインする" />
-        <a href="#" class="formLink">会員登録はこちら</a>
+        <a href="{{ route('register') }}" class="formLink">会員登録はこちら</a>
       </div>
     </form>
   </section>
