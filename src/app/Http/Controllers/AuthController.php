@@ -111,4 +111,20 @@ class AuthController extends Controller
             'login_identifier' => 'ログイン情報が登録されていません。',
         ]);
     }
+
+    /**
+     * ログアウト処理
+     */
+    public function logout(Request $request)
+    {
+        // ユーザーをログアウト
+        Auth::logout();
+
+        // セッションを無効化し、CSRFトークンを再生成
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // ログインページにリダイレクト
+        return redirect()->route('login');
+    }
 }

@@ -48,7 +48,7 @@ Route::get('/login', [AuthenticatedSessionController::class, 'create'])
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 // ログアウト処理
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware(['auth'])
     ->name('logout');
 

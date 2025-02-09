@@ -70,6 +70,9 @@ body {
   text-decoration: none;
   font-size: 2.4rem;
   font-weight: bold;
+  background: unset;
+  border: none;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {
