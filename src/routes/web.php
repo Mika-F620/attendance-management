@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Facades\Fortify;
 use App\Http\Controllers\AuthController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\AttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,3 +107,5 @@ Route::get('stamp_correction_request/approve/{attendance_correct_request}', func
 
     return view('stamp_correction_request.approve.show', compact('attendance_correct_request'));  // ビューにIDを渡す
 });
+
+Route::get('attendance', [AttendanceController::class, 'show'])->middleware('auth');

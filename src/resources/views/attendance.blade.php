@@ -27,8 +27,8 @@
     <div class="wrapper checkIn">
       <div class="checkIn__contents">
         <p class="checkIn__label">勤務外</p>
-        <p class="checkIn__date">2023年6月1日(木)</p>
-        <p class="checkIn__time">08:00</p>
+        <p class="checkIn__date">{{ $today->format('Y年m月d日') }} ({{ $weekday }})</p>
+        <p class="checkIn__time">{{ $today->format('H:i') }}</p>
       </div>
       <button class="blackBtn checkIn__btn">出勤</button>
     </div>
