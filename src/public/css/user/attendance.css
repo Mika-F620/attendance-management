@@ -71,3 +71,25 @@
     font-size: 2.4rem;
   }
 }
+
+.checkIn__work {
+  display: flex;
+  gap: 82px;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (max-width: 768px) {
+  .checkIn__work {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.checkIn__thanks {
+  font-size: 2.6rem;
+  color: #000;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+}

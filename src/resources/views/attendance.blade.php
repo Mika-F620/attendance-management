@@ -31,43 +31,42 @@
         <p class="checkIn__time">{{ $today->format('H:i') }}</p>
       </div>
       <!-- 出勤フォーム -->
-      <form action="{{ route('start-work') }}" method="POST" id="attendance-form">
+      <form action="{{ route('start-work') }}" method="POST" id="attendance-form" style="display: {{ $status === '勤務外' ? 'block' : 'none' }}">
         @csrf
-        <button class="blackBtn checkIn__btn" type="submit" id="attendance-btn" 
-        style="display: {{ $status === '勤務外' ? 'block' : 'none' }}">
+        <button class="blackBtn checkIn__btn" type="submit" id="attendance-btn">
           出勤
         </button>
       </form>
 
-      <!-- 休憩入フォーム -->
-      <form action="{{ route('start-rest') }}" method="POST" id="rest-form">
-        @csrf
-        <button class="blackBtn checkIn__btn" type="submit" id="rest-btn" 
-        style="display: {{ $status === '出勤中' ? 'inline-block' : 'none' }}">
-          休憩入
-        </button>
-      </form>
+      <div class="checkIn__work" style="display: {{ $status === '出勤中' && $status !== '休憩中' ? 'flex' : 'none' }}">
+        <!-- 退勤フォーム（休憩中のみ表示しない） -->
+        <form action="{{ route('end-work') }}" method="POST" id="end-form" style="display: {{ $status === '出勤中' && $status !== '休憩中' ? 'inline-block' : 'none' }}">
+          @csrf
+          <button class="blackBtn checkIn__btn" type="submit" id="end-btn">
+            退勤
+          </button>
+        </form>
+
+        <!-- 休憩入フォーム -->
+        <form action="{{ route('start-rest') }}" method="POST" id="rest-form" style="display: {{ $status === '出勤中' ? 'inline-block' : 'none' }}">
+          @csrf
+          <button class="whiteBtn checkIn__btn" type="submit" id="rest-btn">
+            休憩入
+          </button>
+        </form>
+      </div>
 
       <!-- 休憩戻フォーム（休憩中のみ表示） -->
-      <form action="{{ route('end-rest') }}" method="POST" id="end-rest-form">
+      <form action="{{ route('end-rest') }}" method="POST" id="end-rest-form" style="display: {{ $status === '休憩中' ? 'inline-block' : 'none' }}">
         @csrf
-        <button class="blackBtn checkIn__btn" type="submit" id="end-rest-btn" 
-        style="display: {{ $status === '休憩中' ? 'inline-block' : 'none' }}">
+        <button class="blackBtn checkIn__btn" type="submit" id="end-rest-btn">
           休憩戻
         </button>
       </form>
 
-      <!-- 退勤フォーム（休憩中のみ表示しない） -->
-      <form action="{{ route('end-work') }}" method="POST" id="end-form">
-        @csrf
-        <button class="blackBtn checkIn__btn" type="submit" id="end-btn" 
-        style="display: {{ $status === '出勤中' && $status !== '休憩中' ? 'inline-block' : 'none' }}">
-          退勤
-        </button>
-      </form>
       <!-- 退勤後のメッセージ -->
       @if ($status === '退勤済')
-        <p>お疲れ様でした。</p>
+        <p class="checkIn__thanks">お疲れ様でした。</p>
       @endif
     </div>
   </div>
