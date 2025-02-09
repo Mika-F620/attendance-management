@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Facades\Fortify;
 use App\Http\Controllers\AuthController;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +39,18 @@ Route::get('home', function () {
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register.form');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 
-Route::get('login', function () {
-    return view('auth.login');
-});
+// ログインフォームの表示
+Route::get('/login', [AuthenticatedSessionController::class, 'create'])
+    ->middleware(['guest'])
+    ->name('login');
+
+// ログイン処理
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+// ログアウト処理
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware(['auth'])
+    ->name('logout');
 
 Route::middleware(['auth', 'verified'])->get('/attendance', function () {
     return view('attendance');

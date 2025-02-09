@@ -102,7 +102,7 @@ class AuthController extends Controller
                 }
 
                 // 認証されたユーザーの場合、トップページにリダイレクト
-                return redirect('/');  // ここでトップページに遷移
+                return redirect('attendance');  // ここでトップページに遷移
             }
         }
 

@@ -39,7 +39,7 @@
       </div>
       <div class="register__btn">
         <input class="blackBtn register__btnBlack" type="submit" value="登録" />
-        <a href="" class="formLink">ログインはこちら</a>
+        <a href="{{ route('login') }}" class="formLink">ログインはこちら</a>
       </div>
     </form>
   </section>
