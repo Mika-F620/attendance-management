@@ -8,7 +8,17 @@
       <li class="header__list"><a class="header__link" href="#">勤怠</a></li>
       <li class="header__list"><a class="header__link" href="#">勤怠一覧</a></li>
       <li class="header__list"><a class="header__link" href="#">申請</a></li>
-      <li class="header__list"><a class="header__link" href="#">ログアウト</a></li>
+      <li class="header__list">
+        @if (Auth::check())
+          <form class="" action="/logout" method="post">
+            @csrf
+            <button class="header__link">ログアウト</button>
+          </form>
+        @else
+          <!-- ログインしていない場合、ログインボタンを表示 -->
+          <a class="header__link" href="{{ route('login') }}">ログイン</a>
+        @endif
+      </li>
     </ul>
   </nav>
 @endsection
@@ -16,43 +26,52 @@
   <section class="attendanceShow grayBg">
     <div class="attendanceShow__contents wrapper">
       <h2 class="pageTitle">勤怠詳細</h2>
-      <form class="attendanceShow__details">
+      <form class="attendanceShow__details" action="{{ route('attendance.update', $attendance->id) }}" method="POST">
         @csrf
         @method('PUT') <!-- 更新の場合はPUTメソッドを明示 -->
         <div class="attendanceShow__formContents">
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">名前</label>
-            <p class="attendanceShow__content attendanceShow__name">西　伶奈</p>
+            <p class="attendanceShow__content attendanceShow__name">{{ $attendance->user->name }}</p>
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">日付</label>
             <div class="attendanceShow__content">
-              <input type="text" class="attendanceShow__contentInput attendanceShow__date" value="2023年">
-              <input type="text" class="attendanceShow__contentInput" value="6月1日">
+              <input type="text" class="attendanceShow__contentInput attendanceShow__date" value="{{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}" name="date_year">
+              <input type="text" class="attendanceShow__contentInput" value="{{ \Carbon\Carbon::parse($attendance->date)->format('m月d日') }}" name="date_day">
             </div>
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">出勤・退勤</label>
             <div class="attendanceShow__content">
-              <input type="text" class="attendanceShow__contentInput" value="09:00">
+              <input type="text" class="attendanceShow__contentInput" value="{{ \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}" name="start_time">
               <span class="attendanceShow__contentCenter">〜</span>
-              <input type="text" class="attendanceShow__contentInput" value="18:00">
+              <input type="text" class="attendanceShow__contentInput" value="{{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}" name="end_time">
             </div>
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">休憩</label>
             <div class="attendanceShow__content">
-              <input type="text" class="attendanceShow__contentInput" value="12:00">
+              <input type="text" class="attendanceShow__contentInput" value="{{ \Carbon\Carbon::parse($attendance->break_start_time)->format('H:i') }}" name="break_start_time">
               <span class="attendanceShow__contentCenter">〜</span>
-              <input type="text" class="attendanceShow__contentInput" value="13:00">
+              <input type="text" class="attendanceShow__contentInput" value="{{ \Carbon\Carbon::parse($attendance->break_end_time)->format('H:i') }}" name="break_end_time">
             </div>
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">備考</label>
-            <textarea class="attendanceShow__content attendanceShow__contentTextarea">電車遅延のため</textarea>
+            <textarea class="attendanceShow__content attendanceShow__contentTextarea" name="remarks">{{ $attendance->remarks }}</textarea>
           </div>
         </div>
         <input class="blackBtn attendanceShow__btn" type="submit" value="修正" />
+        @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
       </form>
     </div>
   </section>

@@ -17,6 +17,7 @@ class CreateAttendancesTable extends Migration
             $table->time('break_start_time')->nullable();
             $table->time('break_end_time')->nullable();
             $table->enum('status', ['出勤中', '退勤済', '休憩中', '勤務外'])->default('勤務外');
+            $table->text('remarks')->nullable();  // 備考カラムを追加
             $table->timestamps();
         });
     }

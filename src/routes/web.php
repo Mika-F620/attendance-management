@@ -62,12 +62,12 @@ Route::get('attendance/list', function () {
     return view('attendance.list');
 });
 
-Route::get('attendance/{id}', function ($id) {
-    // ユーザーID（$id）に基づいて勤怠情報を取得する処理（例えば、DBから取得）
-    // 例: $attendance = Attendance::find($id);
+// Route::get('attendance/{id}', function ($id) {
+//     // ユーザーID（$id）に基づいて勤怠情報を取得する処理（例えば、DBから取得）
+//     // 例: $attendance = Attendance::find($id);
 
-    return view('attendance.show', compact('id'));  // ビューにIDを渡す
-});
+//     return view('attendance.show', compact('id'));  // ビューにIDを渡す
+// });
 
 Route::get('stamp_correction_request/list', function () {
     // 申請一覧データを取得する処理（例: データベースから申請情報を取得）
@@ -118,3 +118,8 @@ Route::post('/end-work', [AttendanceController::class, 'endWork'])->name('end-wo
 Route::post('/end-rest', [AttendanceController::class, 'endRest'])->name('end-rest');
 
 Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');
+
+// 詳細ページ用ルートを追加
+Route::get('/attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');
+Route::put('attendance/{id}', [AttendanceController::class, 'update'])->name('attendance.update');
+
