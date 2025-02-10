@@ -40,6 +40,12 @@
               <input type="text" class="attendanceShow__contentInput attendanceShow__date" value="{{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}" name="date_year">
               <input type="text" class="attendanceShow__contentInput" value="{{ \Carbon\Carbon::parse($attendance->date)->format('m月d日') }}" name="date_day">
             </div>
+            @error('date_year')
+              <p class="form__error">{{ $message }}</p>
+            @enderror
+            @error('date_day')
+              <p class="form__error">{{ $message }}</p>
+            @enderror
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">出勤・退勤</label>
@@ -48,6 +54,12 @@
               <span class="attendanceShow__contentCenter">〜</span>
               <input type="text" class="attendanceShow__contentInput" value="{{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}" name="end_time">
             </div>
+            @error('start_time')
+              <p class="form__error">{{ $message }}</p>
+            @enderror
+            @error('end_time')
+              <p class="form__error">{{ $message }}</p>
+            @enderror
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">休憩</label>
@@ -56,22 +68,22 @@
               <span class="attendanceShow__contentCenter">〜</span>
               <input type="text" class="attendanceShow__contentInput" value="{{ \Carbon\Carbon::parse($attendance->break_end_time)->format('H:i') }}" name="break_end_time">
             </div>
+            @error('break_start_time')
+              <p class="form__error">{{ $message }}</p>
+            @enderror
+            @error('break_end_time')
+              <p class="form__error">{{ $message }}</p>
+            @enderror
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">備考</label>
             <textarea class="attendanceShow__content attendanceShow__contentTextarea" name="remarks">{{ $attendance->remarks }}</textarea>
+            @error('remarksd')
+              <p class="form__error">{{ $message }}</p>
+            @enderror
           </div>
         </div>
         <input class="blackBtn attendanceShow__btn" type="submit" value="修正" />
-        @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
       </form>
     </div>
   </section>

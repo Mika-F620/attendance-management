@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Http\Requests\UpdateAttendanceRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;  // Carbonを使って日付と時間を操作します
@@ -160,52 +161,39 @@ public function showDetail($id)
     return view('attendance.show', compact('attendance'));  // ビューにデータを渡す
 }
 
-public function update(Request $request, $id)
-{
-    // バリデーション
-    $validated = $request->validate([
-        'remarks' => 'nullable|string|max:255',
-        'date_year' => 'required|string',  // 年
-        'date_day' => 'required|string',   // 日付
-        'start_time' => 'nullable|date_format:H:i',
-        'end_time' => 'nullable|date_format:H:i',
-        'break_start_time' => 'nullable|date_format:H:i',
-        'break_end_time' => 'nullable|date_format:H:i',
-    ]);
+public function update(UpdateAttendanceRequest $request, $id)
+    {
+        // フォームリクエストでバリデーションが行われた後、処理が進みます
 
-    // 勤怠情報を取得
-    $attendance = Attendance::where('user_id', Auth::id())
-                            ->where('id', $id)
-                            ->firstOrFail();  // 存在しない場合は404エラー
+        // 勤怠情報を取得
+        $attendance = Attendance::where('user_id', Auth::id())
+                                ->where('id', $id)
+                                ->firstOrFail();  // 存在しない場合は404エラー
 
-    // 年と月日を分けて、適切にフォーマットする
-    $year = str_replace('年', '', $request->input('date_year'));  // '年'を取り除く
-    $date_day = $request->input('date_day');  // 月日（例: 10月2日）
+        // 年と月日を分けて、適切にフォーマットする
+        $year = str_replace('年', '', $request->input('date_year'));  // '年'を取り除く
+        $date_day = $request->input('date_day');  // 月日（例: 10月2日）
 
-    // 「月日」から「月」と「日」を取得
-    $date_parts = explode('月', $date_day);  // 月の部分を取り出す
-    $month = str_pad(trim($date_parts[0]), 2, '0', STR_PAD_LEFT);  // 月を2桁に補完（例: 09）
-    $day = str_pad(trim(explode('日', $date_parts[1])[0]), 2, '0', STR_PAD_LEFT);  // 日を2桁に補完（例: 02）
+        // 「月日」から「月」と「日」を取得
+        $date_parts = explode('月', $date_day);  // 月の部分を取り出す
+        $month = str_pad(trim($date_parts[0]), 2, '0', STR_PAD_LEFT);  // 月を2桁に補完（例: 09）
+        $day = str_pad(trim(explode('日', $date_parts[1])[0]), 2, '0', STR_PAD_LEFT);  // 日を2桁に補完（例: 02）
 
-    // 正しい形式に変換（'年'を取り除き、'月'と'日'も取り除いて結合）
-    $date = $year . '-' . $month . '-' . $day;  // 例: 2024-02-10
+        // 正しい形式に変換（'年'を取り除き、'月'と'日'も取り除いて結合）
+        $date = $year . '-' . $month . '-' . $day;  // 例: 2024-02-10
 
-    // 確認のため、ここで出力してみてください
-    // dd($date);  // 日付が正しく形成されていることを確認
+        // 更新する勤怠情報の保存
+        $attendance->date = $date;  // 年月日を更新
+        $attendance->start_time = $request->input('start_time');
+        $attendance->end_time = $request->input('end_time');
+        $attendance->break_start_time = $request->input('break_start_time');
+        $attendance->break_end_time = $request->input('break_end_time');
+        $attendance->remarks = $request->input('remarks');  // 備考を保存
 
-    // 更新する勤怠情報の保存
-    $attendance->date = $date;  // 年月日を更新
-    $attendance->start_time = $request->input('start_time');
-    $attendance->end_time = $request->input('end_time');
-    $attendance->break_start_time = $request->input('break_start_time');
-    $attendance->break_end_time = $request->input('break_end_time');
-    $attendance->remarks = $request->input('remarks');  // 備考を保存
+        $attendance->save();
 
-    $attendance->save();
-
-    // 更新後、勤怠詳細ページへリダイレクト
-    return redirect()->route('attendance.show', $attendance->id)->with('status', '勤怠情報が更新されました');
-}
-
+        // 更新後、勤怠詳細ページへリダイレクト
+        return redirect()->route('attendance.show', $attendance->id)->with('status', '勤怠情報が更新されました');
+    }
 
 }
