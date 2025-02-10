@@ -78,7 +78,7 @@
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">備考</label>
             <textarea class="attendanceShow__content attendanceShow__contentTextarea" name="remarks">{{ $attendance->remarks }}</textarea>
-            @error('remarksd')
+            @error('remarks')
               <p class="form__error">{{ $message }}</p>
             @enderror
           </div>
