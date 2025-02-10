@@ -5,19 +5,19 @@
 @section('content')
   <section class="login wrapper">
     <h2 class="sectionTitle">管理者ログイン</h2>
-    <form class="login__form" method="POST" action="">
+    <form class="login__form" method="POST" action="{{ url('/admin/login') }}">
       @csrf
       <div class="login__formContents">
         <div class="login__item">
           <label class="login__label" for="login_identifier">メールアドレス</label>
-          <input class="login__input" type="text" name="login_identifier" id="login_identifier" value="{{ old('login_identifier') }}">
-          @error('login_identifier')
+          <input class="login__input" type="text" name="email" id="email" value="{{ old('email') }}">
+          @error('email')
             <p class="form__error">{{ $message }}</p>
           @enderror
         </div>
         <div class="login__item">
           <label class="login__label" for="pass">パスワード</label>
-          <input class="login__input" type="password" name="password" class="" id="pass">
+          <input class="login__input" type="password" name="password" id="pass">
           @error('password')
             <p class="form__error">{{ $message }}</p>
           @enderror

@@ -5,6 +5,8 @@ use Laravel\Fortify\Facades\Fortify;
 use App\Http\Controllers\AuthController;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\Admin\AdminAttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,9 +78,9 @@ Route::get('stamp_correction_request/list', function () {
     return view('stamp_correction_request.list');  // ビューを表示
 });
 
-Route::get('admin/login', function () {
-    return view('auth.admin.login');
-});
+// Route::get('admin/login', function () {
+//     return view('auth.admin.login');
+// });
 
 // Route::get('admin/attendance/list', function () {
 //     // 申請一覧データを取得する処理（例: データベースから申請情報を取得）
@@ -122,4 +124,17 @@ Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('att
 // 詳細ページ用ルートを追加
 Route::get('/attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');
 Route::put('attendance/{id}', [AttendanceController::class, 'update'])->name('attendance.update');
+
+// 管理者ログインルート
+Route::get('admin/login', [AdminAuthController::class, 'loginForm'])->name('admin.login');
+Route::post('admin/login', [AdminAuthController::class, 'login']);
+
+// 管理者用の勤怠一覧
+Route::middleware('auth')->prefix('admin')->group(function() {
+    Route::get('attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.list');
+});
+
+Route::prefix('admin')->name('admin.')->group(function() {
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+});
 
