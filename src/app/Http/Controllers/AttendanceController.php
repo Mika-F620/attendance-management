@@ -120,5 +120,14 @@ class AttendanceController extends Controller
     return redirect()->route('attendance')->with('status', '休憩中か出勤していません');
 }
 
+    public function list()
+    {
+        // ログインユーザーに絞った勤怠データを取得
+        $attendances = Attendance::where('user_id', Auth::id())  // ログイン中のユーザーに絞り込み
+                                ->orderBy('date', 'desc')  // 日付順に並べる（降順）
+                                ->paginate(10);  // 1ページ10件に分けて表示
+
+        return view('attendance.list', compact('attendances'));  // ビューにデータを渡す
+    }
 
 }

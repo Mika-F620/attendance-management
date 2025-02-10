@@ -23,7 +23,7 @@
         </p>
         <p class="attendanceList__paginationCenter">
           <img class="" src="{{ asset('img/calendar.svg') }}" alt="カレンダー">
-          2023/06
+          {{ now()->format('Y/m') }}
         </p>
         <p class="attendanceList__paginationRight">
           翌月
@@ -39,23 +39,31 @@
           <th class="attendanceList__title">合計</th>
           <th class="attendanceList__title">詳細</th>
         </tr>
+        @foreach ($attendances as $attendance)
         <tr class="attendanceList__line">
-          <td class="attendanceList__detail">06/01(木)</td>
-          <td class="attendanceList__detail">09:00</td>
-          <td class="attendanceList__detail">18:00</td>
-          <td class="attendanceList__detail">1:00</td>
-          <td class="attendanceList__detail">8:00</td>
+          <td class="attendanceList__detail">{{ \Carbon\Carbon::parse($attendance->date)->locale('ja')->isoFormat('MM/DD (ddd)') }}</td>
+          <td class="attendanceList__detail">{{ \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}</td>
+          <td class="attendanceList__detail">{{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}</td>
+          <td class="attendanceList__detail">
+            @if ($attendance->break_start_time && $attendance->break_end_time)
+              {{ \Carbon\Carbon::parse($attendance->break_start_time)->diff(\Carbon\Carbon::parse($attendance->break_end_time))->format('%H:%I') }}
+            @else
+              -
+            @endif
+          </td>
+          <td class="attendanceList__detail">
+            @if ($attendance->start_time && $attendance->end_time)
+              {{ \Carbon\Carbon::parse($attendance->start_time)->diff(\Carbon\Carbon::parse($attendance->end_time))->format('%H:%I') }}
+            @else
+              -
+            @endif
+          </td>
           <td class="attendanceList__detail">詳細</td>
         </tr>
-        <tr class="attendanceList__line">
-          <td class="attendanceList__detail">06/01(木)</td>
-          <td class="attendanceList__detail">09:00</td>
-          <td class="attendanceList__detail">18:00</td>
-          <td class="attendanceList__detail">1:00</td>
-          <td class="attendanceList__detail">8:00</td>
-          <td class="attendanceList__detail">詳細</td>
-        </tr>
+        @endforeach
       </table>
+      <!-- ページネーション -->
+      {{ $attendances->links() }}
     </div>
   </section>
 @endsection

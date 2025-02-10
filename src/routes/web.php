@@ -80,12 +80,12 @@ Route::get('admin/login', function () {
     return view('auth.admin.login');
 });
 
-Route::get('admin/attendance/list', function () {
-    // 申請一覧データを取得する処理（例: データベースから申請情報を取得）
-    // 例: $requests = StampCorrectionRequest::all();
+// Route::get('admin/attendance/list', function () {
+//     // 申請一覧データを取得する処理（例: データベースから申請情報を取得）
+//     // 例: $requests = StampCorrectionRequest::all();
 
-    return view('admin.attendance.list');  // ビューを表示
-});
+//     return view('admin.attendance.list');  // ビューを表示
+// });
 
 Route::get('admin/staff/list', function () {
     // 申請一覧データを取得する処理（例: データベースから申請情報を取得）
@@ -116,3 +116,5 @@ Route::post('/start-rest', [AttendanceController::class, 'startRest'])->name('st
 Route::post('/end-work', [AttendanceController::class, 'endWork'])->name('end-work');
 // 休憩戻処理
 Route::post('/end-rest', [AttendanceController::class, 'endRest'])->name('end-rest');
+
+Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendance.list');

@@ -15,4 +15,9 @@ class Attendance extends Model
 
     // もしタイムスタンプを使用しない場合
     public $timestamps = false;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
