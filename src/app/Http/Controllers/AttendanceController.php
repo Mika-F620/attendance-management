@@ -120,14 +120,34 @@ class AttendanceController extends Controller
     return redirect()->route('attendance')->with('status', '休憩中か出勤していません');
 }
 
-    public function list()
-    {
-        // ログインユーザーに絞った勤怠データを取得
-        $attendances = Attendance::where('user_id', Auth::id())  // ログイン中のユーザーに絞り込み
-                                ->orderBy('date', 'desc')  // 日付順に並べる（降順）
-                                ->paginate(10);  // 1ページ10件に分けて表示
+public function list(Request $request)
+{
+    // デフォルトで現在の月を表示（もし月がリクエストで来ていなければ）
+    $month = $request->input('month', now()->format('Y-m'));
 
-        return view('attendance.list', compact('attendances'));  // ビューにデータを渡す
+    // 前月ボタンが押された場合
+    if ($request->has('previous')) {
+        $month = Carbon::parse($month)->subMonth()->format('Y-m');  // 1ヶ月前
     }
+
+    // 翌月ボタンが押された場合
+    if ($request->has('next')) {
+        $month = Carbon::parse($month)->addMonth()->format('Y-m');  // 1ヶ月後
+    }
+
+    // 月ごとに勤怠情報を取得
+    $attendances = Attendance::where('user_id', Auth::id())
+        ->whereMonth('date', Carbon::parse($month)->month)  // 月をフィルター
+        ->whereYear('date', Carbon::parse($month)->year)   // 年をフィルター
+        ->orderBy('date', 'desc')  // 日付順に並べる（降順）
+        ->paginate(10);  // 1ページ10件に分けて表示
+
+    // 選択した月をビューに渡す
+    return view('attendance.list', [
+        'attendances' => $attendances,
+        'month' => $month
+    ]);
+}
+
 
 }

@@ -8,7 +8,17 @@
       <li class="header__list"><a class="header__link" href="#">勤怠</a></li>
       <li class="header__list"><a class="header__link" href="#">勤怠一覧</a></li>
       <li class="header__list"><a class="header__link" href="#">申請</a></li>
-      <li class="header__list"><a class="header__link" href="#">ログアウト</a></li>
+      <li class="header__list">
+        @if (Auth::check())
+          <form class="" action="/logout" method="post">
+            @csrf
+            <button class="header__link">ログアウト</button>
+          </form>
+        @else
+          <!-- ログインしていない場合、ログインボタンを表示 -->
+          <a class="header__link" href="{{ route('login') }}">ログイン</a>
+        @endif
+      </li>
     </ul>
   </nav>
 @endsection
@@ -17,18 +27,25 @@
     <div class="attendanceList wrapper">
       <h2 class="pageTitle">勤怠一覧</h2>
       <div class="attendanceList__pagination">
-        <p class="attendanceList__paginationLeft">
-          <img class="" src="{{ asset('img/left-arrow.svg') }}" alt="左矢印">
-          前月
-        </p>
+        <!-- 前月のリンク -->
+        <form action="{{ route('attendance.list') }}" method="GET" style="display: inline;">
+          <input type="hidden" name="month" value="{{ \Carbon\Carbon::parse($month)->subMonth()->format('Y-m') }}" />
+          <button type="submit" name="previous" class="attendanceList__paginationLeft">
+            <img src="{{ asset('img/left-arrow.svg') }}" alt="左矢印"> 前月
+          </button>
+        </form>
+        <!-- 今月の年月の表示部分 -->
         <p class="attendanceList__paginationCenter">
           <img class="" src="{{ asset('img/calendar.svg') }}" alt="カレンダー">
-          {{ now()->format('Y/m') }}
+          {{ \Carbon\Carbon::parse($month)->format('Y/m') }}
         </p>
-        <p class="attendanceList__paginationRight">
-          翌月
-          <img class="" src="{{ asset('img/right-arrow.svg') }}" alt="右矢印">
-        </p>
+        <!-- 翌月のリンク -->
+        <form action="{{ route('attendance.list') }}" method="GET" style="display: inline;">
+          <input type="hidden" name="month" value="{{ \Carbon\Carbon::parse($month)->addMonth()->format('Y-m') }}" />
+          <button type="submit" name="next" class="attendanceList__paginationRight">
+            翌月 <img class="" src="{{ asset('img/right-arrow.svg') }}" alt="右矢印">
+          </button>
+        </form>
       </div>
       <table class="attendanceList__table">
         <tr class="attendanceList__line">
