@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Http\Requests\AdminLoginRequest;
 
 class AdminAuthController extends Controller
 {
@@ -15,7 +16,7 @@ class AdminAuthController extends Controller
     }
 
     // 管理者ログイン処理
-    public function login(Request $request)
+    public function login(AdminLoginRequest $request)
     {
         // ログインに必要な情報を取得（login_identifier → emailに変更）
         $credentials = $request->only('email', 'password');  // 'login_identifier' を 'email' に変更
@@ -26,7 +27,7 @@ class AdminAuthController extends Controller
             return redirect()->route('admin.attendance.list');
         }
 
-        return back()->withErrors(['login_error' => '認証に失敗しました。']);
+        return back()->withErrors(['login_error' => 'ログイン情報が登録されていません。']);
     }
 
     // ログアウト処理
