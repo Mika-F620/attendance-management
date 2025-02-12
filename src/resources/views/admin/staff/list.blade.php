@@ -22,16 +22,13 @@
           <th class="requestList__title">メールアドレス</th>
           <th class="requestList__title">月次勤怠</th>
         </tr>
-        <tr class="requestList__line">
-          <td class="requestList__detail">西 伶奈</td>
-          <td class="requestList__detail">reina.n@coachtech.com</td>
-          <td class="requestList__detail">詳細</td>
-        </tr>
-        <tr class="requestList__line">
-          <td class="requestList__detail">山田 太郎</td>
-          <td class="requestList__detail">taro.y@coachtech.com</td>
-          <td class="requestList__detail">詳細</td>
-        </tr>
+        @foreach ($staffs as $staff)
+          <tr class="requestList__line">
+            <td class="requestList__detail">{{ $staff->name }}</td>
+            <td class="requestList__detail">{{ $staff->email }}</td>
+            <td class="requestList__detail"><a href="{{ route('admin.attendance.staff') }}">詳細</a></td>
+          </tr>
+        @endforeach
       </table>
     </div>
   </section>

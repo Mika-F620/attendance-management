@@ -7,6 +7,7 @@ use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
+use App\Http\Controllers\Admin\StaffController;
 
 /*
 |--------------------------------------------------------------------------
@@ -138,3 +139,6 @@ Route::prefix('admin')->name('admin.')->group(function() {
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
 });
 
+Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
+    Route::get('staff/list', [StaffController::class, 'index'])->name('staff.list');
+});
