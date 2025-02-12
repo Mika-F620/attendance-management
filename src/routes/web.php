@@ -142,3 +142,8 @@ Route::prefix('admin')->name('admin.')->group(function() {
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
     Route::get('staff/list', [StaffController::class, 'index'])->name('staff.list');
 });
+
+Route::middleware('auth:admin')->prefix('admin')->group(function () {
+    // スタッフ別勤怠詳細表示ページ
+    Route::get('attendance/staff/{id}', [AdminAttendanceController::class, 'staffAttendance'])->name('admin.attendance.staff');
+});

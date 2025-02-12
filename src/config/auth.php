@@ -43,7 +43,7 @@ return [
 
         'admin' => [
             'driver' => 'session',  // adminガードはセッションベースで認証
-            'provider' => 'admins', // adminsプロバイダを使用
+            'provider' => 'users', // adminsプロバイダを使用
         ],
     ],
 

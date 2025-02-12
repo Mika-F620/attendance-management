@@ -6,7 +6,7 @@
   <nav class="header__nav">
     <ul class="header__menu">
       <li class="header__list"><a class="header__link" href="#">勤怠</a></li>
-      <li class="header__list"><a class="header__link" href="#">勤怠一覧</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
       <li class="header__list"><a class="header__link" href="#">申請</a></li>
       <li class="header__list"><a class="header__link" href="#">ログアウト</a></li>
     </ul>
@@ -15,20 +15,27 @@
 @section('content')
   <section class="grayBg">
     <div class="attendanceList wrapper">
-      <h2 class="pageTitle">西玲奈さんの勤怠</h2>
+      <h2 class="pageTitle">{{ $staff->name }}さんの勤怠</h2>
       <div class="attendanceList__pagination">
-        <p class="attendanceList__paginationLeft">
-          <img class="" src="{{ asset('img/left-arrow.svg') }}" alt="左矢印">
-          前月
-        </p>
+        <!-- 前月のリンク -->
+        <form action="{{ route('attendance.list') }}" method="GET" style="display: inline;">
+          <input type="hidden" name="month" value="{{ \Carbon\Carbon::parse($month)->subMonth()->format('Y-m') }}" />
+          <button type="submit" name="previous" class="attendanceList__paginationLeft">
+            <img src="{{ asset('img/left-arrow.svg') }}" alt="左矢印"> 前月
+          </button>
+        </form>
+        <!-- 今月の年月の表示部分 -->
         <p class="attendanceList__paginationCenter">
           <img class="" src="{{ asset('img/calendar.svg') }}" alt="カレンダー">
-          2023/06
+          {{ \Carbon\Carbon::parse($month)->format('Y/m') }}
         </p>
-        <p class="attendanceList__paginationRight">
-          翌月
-          <img class="" src="{{ asset('img/right-arrow.svg') }}" alt="右矢印">
-        </p>
+        <!-- 翌月のリンク -->
+        <form action="{{ route('attendance.list') }}" method="GET" style="display: inline;">
+          <input type="hidden" name="month" value="{{ \Carbon\Carbon::parse($month)->addMonth()->format('Y-m') }}" />
+          <button type="submit" name="next" class="attendanceList__paginationRight">
+            翌月 <img class="" src="{{ asset('img/right-arrow.svg') }}" alt="右矢印">
+          </button>
+        </form>
       </div>
       <table class="attendanceList__table">
         <tr class="attendanceList__line">
@@ -39,23 +46,32 @@
           <th class="attendanceList__title">合計</th>
           <th class="attendanceList__title">詳細</th>
         </tr>
-        <tr class="attendanceList__line">
-          <td class="attendanceList__detail">06/01(木)</td>
-          <td class="attendanceList__detail">09:00</td>
-          <td class="attendanceList__detail">18:00</td>
-          <td class="attendanceList__detail">1:00</td>
-          <td class="attendanceList__detail">8:00</td>
-          <td class="attendanceList__detail">詳細</td>
-        </tr>
-        <tr class="attendanceList__line">
-          <td class="attendanceList__detail">06/02(金)</td>
-          <td class="attendanceList__detail">09:00</td>
-          <td class="attendanceList__detail">18:00</td>
-          <td class="attendanceList__detail">1:00</td>
-          <td class="attendanceList__detail">8:00</td>
-          <td class="attendanceList__detail">詳細</td>
-        </tr>
+        @foreach ($attendances as $attendance)
+          <tr class="attendanceList__line">
+            <td class="attendanceList__detail">{{ \Carbon\Carbon::parse($attendance->date)->format('m/d (D)') }}</td>
+            <td class="attendanceList__detail">{{ \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}</td>
+            <td class="attendanceList__detail">{{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}</td>
+            <td class="attendanceList__detail">
+              @if ($attendance->break_start_time && $attendance->break_end_time)
+                {{ \Carbon\Carbon::parse($attendance->break_start_time)->diff(\Carbon\Carbon::parse($attendance->break_end_time))->format('%H:%I') }}
+              @else
+                -
+              @endif
+            </td>
+            <td class="attendanceList__detail">
+              @if ($attendance->start_time && $attendance->end_time)
+                {{ \Carbon\Carbon::parse($attendance->start_time)->diff(\Carbon\Carbon::parse($attendance->end_time))->format('%H:%I') }}
+              @else
+                -
+              @endif
+            </td>
+            <td class="attendanceList__detail">詳細</td>
+          </tr>
+        @endforeach
       </table>
+
+      <!-- ページネーション -->
+      {{ $attendances->links() }}
     </div>
   </section>
 @endsection
