@@ -26,20 +26,27 @@
 @section('content')
   <section class="grayBg">
     <div class="attendanceList wrapper">
-      <h2 class="pageTitle">勤怠一覧</h2>
+      <h2 class="pageTitle">{{ \Carbon\Carbon::parse($date)->format('Y年m月d日の勤怠') }}</h2>
       <div class="attendanceList__pagination">
-        <p class="attendanceList__paginationLeft">
-          <img class="" src="{{ asset('img/left-arrow.svg') }}" alt="左矢印">
-          前月
-        </p>
+        <!-- 前日のリンク -->
+        <form action="{{ route('admin.attendance.list') }}" method="GET" style="display: inline;">
+          <input type="hidden" name="date" value="{{ \Carbon\Carbon::parse($date)->subDay()->format('Y-m-d') }}" />
+          <button type="submit" name="previous" class="attendanceList__paginationLeft">
+            <img src="{{ asset('img/left-arrow.svg') }}" alt="左矢印"> 前日
+          </button>
+        </form>
+        <!-- 今日の日付の表示部分 -->
         <p class="attendanceList__paginationCenter">
           <img class="" src="{{ asset('img/calendar.svg') }}" alt="カレンダー">
-          2023/06
+          {{ \Carbon\Carbon::parse($date)->format('Y/m/d') }}
         </p>
-        <p class="attendanceList__paginationRight">
-          翌月
-          <img class="" src="{{ asset('img/right-arrow.svg') }}" alt="右矢印">
-        </p>
+        <!-- 翌日のリンク -->
+        <form action="{{ route('admin.attendance.list') }}" method="GET" style="display: inline;">
+          <input type="hidden" name="date" value="{{ \Carbon\Carbon::parse($date)->addDay()->format('Y-m-d') }}" />
+          <button type="submit" name="next" class="attendanceList__paginationRight">
+            翌日 <img class="" src="{{ asset('img/right-arrow.svg') }}" alt="右矢印">
+          </button>
+        </form>
       </div>
       <table class="attendanceList__table">
         <tr class="attendanceList__line">
@@ -50,23 +57,31 @@
           <th class="attendanceList__title">合計</th>
           <th class="attendanceList__title">詳細</th>
         </tr>
-        <tr class="attendanceList__line">
-          <td class="attendanceList__detail">山田 太郎</td>
-          <td class="attendanceList__detail">09:00</td>
-          <td class="attendanceList__detail">18:00</td>
-          <td class="attendanceList__detail">1:00</td>
-          <td class="attendanceList__detail">8:00</td>
-          <td class="attendanceList__detail">詳細</td>
-        </tr>
-        <tr class="attendanceList__line">
-          <td class="attendanceList__detail">西 伶奈</td>
-          <td class="attendanceList__detail">09:00</td>
-          <td class="attendanceList__detail">18:00</td>
-          <td class="attendanceList__detail">1:00</td>
-          <td class="attendanceList__detail">8:00</td>
-          <td class="attendanceList__detail">詳細</td>
-        </tr>
+        @foreach ($attendances as $attendance)
+          <tr class="attendanceList__line">
+            <td class="attendanceList__detail">{{ $attendance->user->name }}</td>
+            <td class="attendanceList__detail">{{ \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}</td>
+            <td class="attendanceList__detail">{{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}</td>
+            <td class="attendanceList__detail">
+              @if ($attendance->break_start_time && $attendance->break_end_time)
+                {{ \Carbon\Carbon::parse($attendance->break_start_time)->diff(\Carbon\Carbon::parse($attendance->break_end_time))->format('%H:%I') }}
+              @else
+                -
+              @endif
+            </td>
+            <td class="attendanceList__detail">
+              @if ($attendance->start_time && $attendance->end_time)
+                {{ \Carbon\Carbon::parse($attendance->start_time)->diff(\Carbon\Carbon::parse($attendance->end_time))->format('%H:%I') }}
+              @else
+                -
+              @endif
+            </td>
+            <td class="attendanceList__detail"><a href="{{ route('attendance.show', $attendance->id) }}">詳細</a></td>
+          </tr>
+        @endforeach
       </table>
+      <!-- ページネーション -->
+      {{ $attendances->links() }}
     </div>
   </section>
 @endsection

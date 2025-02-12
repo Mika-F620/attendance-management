@@ -123,18 +123,17 @@ class AttendanceController extends Controller
 
 public function list(Request $request)
 {
-    // デフォルトで現在の月を表示（もし月がリクエストで来ていなければ）
-    $month = $request->input('month', now()->format('Y-m'));
+    // URLパラメータから月を取得、指定がなければ現在の月
+    $month = $request->input('month', Carbon::now()->format('Y-m'));
 
-    // 前月ボタンが押された場合
-    if ($request->has('previous')) {
-        $month = Carbon::parse($month)->subMonth()->format('Y-m');  // 1ヶ月前
-    }
+    // 月ごとに勤怠情報を取得
+    $attendances = Attendance::whereMonth('date', Carbon::parse($month)->month)
+                            ->whereYear('date', Carbon::parse($month)->year)
+                            ->orderBy('date', 'desc')
+                            ->paginate(10);
 
-    // 翌月ボタンが押された場合
-    if ($request->has('next')) {
-        $month = Carbon::parse($month)->addMonth()->format('Y-m');  // 1ヶ月後
-    }
+    // ビューにデータを渡して表示
+    return view('attendance.list', compact('attendances', 'month'));
 
     // 月ごとに勤怠情報を取得
     $attendances = Attendance::where('user_id', Auth::id())
