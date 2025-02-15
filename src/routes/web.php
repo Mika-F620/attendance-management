@@ -8,6 +8,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\Admin\AdminAttendanceController;
 use App\Http\Controllers\Admin\StaffController;
+use App\Http\Controllers\StampCorrectionRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,3 +148,6 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
     // スタッフ別勤怠詳細表示ページ
     Route::get('attendance/staff/{id}', [AdminAttendanceController::class, 'staffAttendance'])->name('admin.attendance.staff');
 });
+
+// 申請一覧ページ
+Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list')->middleware('auth');

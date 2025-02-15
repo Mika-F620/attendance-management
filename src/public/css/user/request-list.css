@@ -2,10 +2,17 @@
 
 .requestList__tab {
   display: flex;
+  gap: 106px;
+  border-bottom: 1px solid #000;
+  padding-bottom: 18px;
 }
 
 .requestList__tabList {
   list-style-type: none;
+}
+
+.requestList__tabList.active {
+  font-weight: bold;
 }
 
 .requestList__table {

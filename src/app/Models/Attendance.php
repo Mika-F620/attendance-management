@@ -12,7 +12,7 @@ class Attendance extends Model
     protected $fillable = ['user_id', 'date', 'start_time', 'end_time', 'break_start_time', 'break_end_time', 'status', 'remarks'];
 
     // もしタイムスタンプを使用しない場合
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function user()
     {
