@@ -14,7 +14,7 @@
             @csrf
             <button class="header__link">ログアウト</button>
           </form>
-        @else
+          @else
           <!-- ログインしていない場合、ログインボタンを表示 -->
           <a class="header__link" href="{{ route('login') }}">ログイン</a>
         @endif

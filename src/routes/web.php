@@ -148,5 +148,11 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
     Route::get('attendance/staff/{id}', [AdminAttendanceController::class, 'staffAttendance'])->name('admin.attendance.staff');
 });
 
-// 申請一覧ページ
-Route::get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list')->middleware('auth');
+// 一般ユーザー用の申請一覧
+Route::middleware(['auth'])->get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
+
+// 管理者用の申請一覧（管理者専用）
+Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::get('stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
+});
+

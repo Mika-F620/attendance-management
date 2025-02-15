@@ -17,14 +17,15 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 // 管理者用のログインを確認
                 if ($guard === 'admin') {
+                    // 管理者ログイン後のリダイレクト先
                     return redirect()->route('admin.attendance.list');
                 }
 
-                return redirect(RouteServiceProvider::HOME);
+                // 一般ユーザー用のログインを確認
+                return redirect(RouteServiceProvider::HOME);  // 一般ユーザー用のリダイレクト先
             }
         }
 
         return $next($request);
     }
 }
-
