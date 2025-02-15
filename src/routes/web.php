@@ -132,13 +132,12 @@ Route::get('admin/login', [AdminAuthController::class, 'loginForm'])->name('admi
 Route::post('admin/login', [AdminAuthController::class, 'login']);
 
 // 管理者用の勤怠一覧
-Route::middleware('auth')->prefix('admin')->group(function() {
+Route::middleware('auth:admin')->prefix('admin')->group(function() {
     Route::get('attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.list');
 });
 
-Route::prefix('admin')->name('admin.')->group(function() {
-    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
-});
+// ログアウトルート
+Route::post('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
     Route::get('staff/list', [StaffController::class, 'index'])->name('staff.list');

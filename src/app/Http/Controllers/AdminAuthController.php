@@ -21,14 +21,16 @@ class AdminAuthController extends Controller
         // ログインに必要な情報を取得（login_identifier → emailに変更）
         $credentials = $request->only('email', 'password');  // 'login_identifier' を 'email' に変更
 
-    // 管理者認証（usersテーブルを使う）
-    if (Auth::guard('admin')->attempt($credentials)) {
-        // 管理者か確認
-        if (Auth::user()->role == 'admin') {
-            // ログイン成功後、管理者用のダッシュボードに遷移
-            return redirect()->route('admin.attendance.list');
+        // 管理者認証（usersテーブルを使う）
+        if (Auth::guard('admin')->attempt($credentials)) {
+            // 管理者がログインした場合、roleが'admin'であるか確認
+            $user = Auth::guard('admin')->user();  // 管理者用のユーザー情報を取得
+
+            if ($user->role == 'admin') {
+                // ログイン成功後、管理者用のダッシュボードに遷移
+                return redirect()->route('admin.attendance.list');
+            }
         }
-    }
 
         return back()->withErrors(['login_error' => 'ログイン情報が登録されていません。']);
     }

@@ -9,26 +9,22 @@ use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @param  string|null  ...$guards
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
-    public function handle(Request $request, Closure $next, $guard = null)
+    public function handle(Request $request, Closure $next, ...$guards)
     {
-        // 管理者がログインしている場合、メール認証をスキップして管理者ダッシュボードにリダイレクト
-        if (Auth::guard('admin')->check()) {
-            return redirect()->route('admin.attendance.list');
-        }
+        $guards = empty($guards) ? [null] : $guards;
 
-        // 一般ユーザーがログインしている場合、通常のリダイレクト
-        if (Auth::guard($guard)->check()) {
-            return redirect(RouteServiceProvider::HOME);
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                // 管理者用のログインを確認
+                if ($guard === 'admin') {
+                    return redirect()->route('admin.attendance.list');
+                }
+
+                return redirect(RouteServiceProvider::HOME);
+            }
         }
 
         return $next($request);
     }
 }
+
