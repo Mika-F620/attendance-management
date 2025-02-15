@@ -156,3 +156,5 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
 });
 
+// 勤怠詳細ページ用ルート
+Route::get('attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');

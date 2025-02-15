@@ -150,15 +150,25 @@ public function list(Request $request)
 }
 
 
+// public function showDetail($id)
+// {
+//     // 勤怠の詳細情報を取得
+//     $attendance = Attendance::where('user_id', Auth::id())  // ログイン中のユーザーに絞る
+//                             ->where('id', $id)  // 勤怠のIDを指定
+//                             ->firstOrFail();  // 存在しない場合は404エラー
+
+//     return view('attendance.show', compact('attendance'));  // ビューにデータを渡す
+// }
+
 public function showDetail($id)
 {
     // 勤怠の詳細情報を取得
-    $attendance = Attendance::where('user_id', Auth::id())  // ログイン中のユーザーに絞る
-                            ->where('id', $id)  // 勤怠のIDを指定
-                            ->firstOrFail();  // 存在しない場合は404エラー
+    $attendance = Attendance::where('id', $id) // ユーザーIDでフィルタリングする必要はない場合もあります
+                            ->firstOrFail(); // 存在しない場合は404エラー
 
     return view('attendance.show', compact('attendance'));  // ビューにデータを渡す
 }
+
 
 public function update(UpdateAttendanceRequest $request, $id)
     {
