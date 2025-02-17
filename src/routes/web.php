@@ -105,12 +105,12 @@ Route::get('admin/attendance/staff/{id}', function ($id) {
     return view('admin.attendance.staff.show', compact('id'));  // ビューにIDを渡す
 });
 
-Route::get('stamp_correction_request/approve/{attendance_correct_request}', function ($attendance_correct_request) {
-    // このIDを使って、関連するデータ（例：申請情報など）を取得
-    // 例: $request = AttendanceCorrectRequest::findOrFail($attendance_correct_request);
+// Route::get('stamp_correction_request/approve/{attendance_correct_request}', function ($attendance_correct_request) {
+//     // このIDを使って、関連するデータ（例：申請情報など）を取得
+//     // 例: $request = AttendanceCorrectRequest::findOrFail($attendance_correct_request);
 
-    return view('stamp_correction_request.approve.show', compact('attendance_correct_request'));  // ビューにIDを渡す
-});
+//     return view('stamp_correction_request.approve.show', compact('attendance_correct_request'));  // ビューにIDを渡す
+// });
 
 // 出勤画面の表示
 Route::middleware(['auth', 'verified'])->get('/attendance', [AttendanceController::class, 'show'])->name('attendance');
@@ -158,3 +158,11 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
 // 勤怠詳細ページ用ルート
 Route::get('attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');
+
+// 管理者用の承認申請ページ
+Route::get('/admin/stamp_correction_request/approve/{id}', [StampCorrectionRequestController::class, 'approve'])
+    ->name('stamp_correction_request.approve');
+
+// 承認の処理を行うためのPATCHメソッド
+Route::patch('/admin/stamp_correction_request/approve/{id}', [StampCorrectionRequestController::class, 'approveSubmit'])
+    ->name('stamp_correction_request.approve.submit');

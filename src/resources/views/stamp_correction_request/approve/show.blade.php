@@ -16,43 +16,48 @@
   <section class="attendanceShow grayBg">
     <div class="attendanceShow__contents wrapper">
       <h2 class="pageTitle">勤怠詳細</h2>
-      <form class="attendanceShow__details">
+      <form class="attendanceShow__details" method="POST" action="{{ route('stamp_correction_request.approve', $attendance->id) }}">
         @csrf
-        @method('PUT') <!-- 更新の場合はPUTメソッドを明示 -->
+        @method('PATCH') <!-- PATCHメソッドを指定 -->
         <div class="attendanceShow__formContents">
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">名前</label>
-            <p class="attendanceShow__content attendanceShow__name">西　伶奈</p>
+            <p class="attendanceShow__content attendanceShow__name">{{ $attendance->user->name }}</p>
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">日付</label>
             <div class="attendanceShow__content">
-              <input type="text" class="attendanceShow__contentInput attendanceShow__date" value="2023年">
-              <input type="text" class="attendanceShow__contentInput" value="6月1日">
+              <p class="attendanceShow__contentInput attendanceShow__date">{{ \Carbon\Carbon::parse($attendance->date)->format('Y年') }}</p>
+              <p class="attendanceShow__contentInput">{{ \Carbon\Carbon::parse($attendance->date)->format('m月d日') }}</p>
             </div>
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">出勤・退勤</label>
             <div class="attendanceShow__content">
-              <input type="text" class="attendanceShow__contentInput" value="09:00">
+              <p class="attendanceShow__contentInput">{{ \Carbon\Carbon::parse($attendance->start_time)->format('H:i') }}</p>
               <span class="attendanceShow__contentCenter">〜</span>
-              <input type="text" class="attendanceShow__contentInput" value="18:00">
+              <p class="attendanceShow__contentInput">{{ \Carbon\Carbon::parse($attendance->end_time)->format('H:i') }}</p>
             </div>
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">休憩</label>
             <div class="attendanceShow__content">
-              <input type="text" class="attendanceShow__contentInput" value="12:00">
+              <p class="attendanceShow__contentInput">{{ \Carbon\Carbon::parse($attendance->break_start_time)->format('H:i') }}</p>
               <span class="attendanceShow__contentCenter">〜</span>
-              <input type="text" class="attendanceShow__contentInput" value="13:00">
+              <p class="attendanceShow__contentInput">{{ \Carbon\Carbon::parse($attendance->break_end_time)->format('H:i') }}</p>
             </div>
           </div>
           <div class="attendanceShow__line">
             <label class="attendanceShow__title">備考</label>
-            <textarea class="attendanceShow__content attendanceShow__contentTextarea">電車遅延のため</textarea>
+            <p class="attendanceShow__content attendanceShow__contentTextarea">{{ $attendance->remarks }}</p>
           </div>
         </div>
-        <input class="blackBtn attendanceShow__btn" type="submit" value="承認" />
+        <!-- 承認ボタンの表示を変更 -->
+        @if ($attendance->approval_status == '承認済み')
+          <input class="blackBtn attendanceShow__btn disabledBtn" type="button" value="承認済み" disabled />
+        @else
+          <input class="blackBtn attendanceShow__btn" type="submit" value="承認" />
+        @endif
       </form>
     </div>
   </section>

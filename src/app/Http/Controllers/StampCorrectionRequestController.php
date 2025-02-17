@@ -23,4 +23,53 @@ class StampCorrectionRequestController extends Controller
         // ビューにデータを渡す
         return view('stamp_correction_request.list', compact('attendances'));
     }
+
+    // 申請承認ページ
+    // public function approve($id)
+    // {
+    //     // // IDに基づいて勤怠申請を取得
+    //     // $attendance = Attendance::findOrFail($id);
+
+    //     // // 申請情報をビューに渡す
+    //     // return view('stamp_correction_request.approve.show', compact('attendance'));
+
+    //     // 該当する勤怠申請を取得
+    //     $attendance = Attendance::findOrFail($id);
+
+    //     // 承認ステータスを「承認済み」に更新
+    //     $attendance->approval_status = '承認済み';
+    //     $attendance->save();
+
+    //     // 承認後、リダイレクト
+    //     return redirect()->route('stamp_correction_request.list')->with('status', '申請が承認されました');
+    // }
+
+    public function approve($id)
+{
+    // 勤怠申請をIDで取得
+    $attendance = Attendance::findOrFail($id);
+
+    // 申請がすでに承認済みの場合はリダイレクト
+    if ($attendance->approval_status == '承認済み') {
+        return redirect()->route('stamp_correction_request.list')->with('error', 'この申請は既に承認されています');
+    }
+
+    // 承認待ちのデータをビューに渡す
+    return view('stamp_correction_request.approve.show', compact('attendance'));
+}
+
+public function approveSubmit(Request $request, $id)
+{
+    // 勤怠申請をIDで取得
+    $attendance = Attendance::findOrFail($id);
+
+    // 承認処理を行い、状態を「承認済み」に変更
+    $attendance->approval_status = '承認済み';
+    $attendance->save();
+
+    // 承認後、一覧ページにリダイレクト
+    return redirect()->route('stamp_correction_request.list')->with('status', '申請が承認されました');
+}
+
+    
 }
