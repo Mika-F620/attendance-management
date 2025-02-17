@@ -166,3 +166,6 @@ Route::get('/admin/stamp_correction_request/approve/{id}', [StampCorrectionReque
 // 承認の処理を行うためのPATCHメソッド
 Route::patch('/admin/stamp_correction_request/approve/{id}', [StampCorrectionRequestController::class, 'approveSubmit'])
     ->name('stamp_correction_request.approve.submit');
+
+// スタッフの勤怠情報CSV出力
+Route::get('admin/staff/{staffId}/export-csv', [StaffController::class, 'exportCsv'])->name('admin.staff.exportCsv');
