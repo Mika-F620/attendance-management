@@ -191,6 +191,11 @@ public function update(UpdateAttendanceRequest $request, $id)
         // 正しい形式に変換（'年'を取り除き、'月'と'日'も取り除いて結合）
         $date = $year . '-' . $month . '-' . $day;  // 例: 2024-02-10
 
+        // 承認済みのデータを修正した場合、ステータスを「承認待ち」に戻す
+        if ($attendance->approval_status == '承認済み') {
+            $attendance->approval_status = '承認待ち';
+        }
+
         // 更新する勤怠情報の保存
         $attendance->date = $date;  // 年月日を更新
         $attendance->start_time = $request->input('start_time');

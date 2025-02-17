@@ -83,7 +83,13 @@
             @enderror
           </div>
         </div>
-        <input class="blackBtn attendanceShow__btn" type="submit" value="修正" />
+        @if ($attendance->approval_status == '承認待ち')
+          <!-- 承認待ちの場合 -->
+          <p class="attendanceShow__error" style="color: red;">*承認待ちのため修正はできません。</p>
+        @else
+          <!-- 承認済みの場合 -->
+          <input class="blackBtn attendanceShow__btn" type="submit" value="修正" />
+        @endif
       </form>
     </div>
   </section>
