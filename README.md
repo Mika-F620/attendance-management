@@ -47,6 +47,6 @@ MySQL10.3.39
 ![er2](https://github.com/user-attachments/assets/b396a367-059f-4f23-b4b3-69286beaecec)
 
 ## URL
-開発環境：http://localhost/
+開発環境：http://localhost/  
 phpMyAdmin:http://localhost:8080/  
 MailHog:http://localhost:8025/
