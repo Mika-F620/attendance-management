@@ -17,7 +17,7 @@ class AttendanceSeeder extends Seeder
             // 各ユーザーに対して複数の勤怠データを作成
             Attendance::create([
                 'user_id' => $user->id,
-                'date' => '2025-02-01',
+                'date' => '2025-02-18',
                 'start_time' => '09:00',
                 'end_time' => '18:00',
                 'break_start_time' => '12:00',
@@ -29,7 +29,7 @@ class AttendanceSeeder extends Seeder
 
             Attendance::create([
                 'user_id' => $user->id,
-                'date' => '2025-02-02',
+                'date' => '2025-02-19',
                 'start_time' => '09:00',
                 'end_time' => '18:00',
                 'break_start_time' => '12:00',

@@ -22,8 +22,8 @@ class UserSeeder extends Seeder
 
         // 一般ユーザーの作成
         User::create([
-            'name' => 'John Doe',
-            'email' => 'john.doe@example.com',
+            'name' => '田中 太郎',
+            'email' => 'tanaka.taro@example.com',
             'password' => Hash::make('password123'),
             'role' => 'user',  // 役職を「user」として設定
             'email_verified_at' => Carbon::now(),  // 現在の日付をメール認証日として設定
@@ -31,8 +31,8 @@ class UserSeeder extends Seeder
 
         // 他のユーザーを追加する場合、同様に繰り返します
         User::create([
-            'name' => 'Jane Doe',
-            'email' => 'jane.doe@example.com',
+            'name' => '山田 花子',
+            'email' => 'yamada.hanako@example.com',
             'password' => Hash::make('password123'),
             'role' => 'user',
             'email_verified_at' => Carbon::now(),  // 現在の日付をメール認証日として設定
