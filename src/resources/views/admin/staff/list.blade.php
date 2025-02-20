@@ -5,10 +5,21 @@
 @section('menu')
   <nav class="header__nav">
     <ul class="header__menu">
-      <li class="header__list"><a class="header__link" href="#">勤怠</a></li>
-      <li class="header__list"><a class="header__link" href="#">勤怠一覧</a></li>
-      <li class="header__list"><a class="header__link" href="#">申請</a></li>
-      <li class="header__list"><a class="header__link" href="#">ログアウト</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('admin.stamp_correction_request.list') }}">申請一覧</a></li>
+      @if (Auth::check())  <!-- ユーザーか管理者がログインしているか確認 -->
+        <li class="header__list">
+          <form action="{{ route('admin.logout') }}" method="POST">
+          @csrf
+            <button class="header__link">ログアウト</button>
+          </form>
+        </li>
+      @else
+        <li class="header__list">
+            <a class="header__link" href="{{ route('admin.login') }}">ログイン</a>
+        </li>
+      @endif
     </ul>
   </nav>
 @endsection

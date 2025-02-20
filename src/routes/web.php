@@ -152,16 +152,20 @@ Route::middleware('auth:admin')->prefix('admin')->group(function () {
 Route::middleware(['auth'])->get('/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
 
 // 管理者用の申請一覧（管理者専用）
-Route::middleware('auth')->prefix('admin')->group(function () {
-    Route::get('stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('stamp_correction_request.list');
+Route::middleware('auth:admin')->group(function() {
+    Route::get('admin/stamp_correction_request/list', [StampCorrectionRequestController::class, 'index'])->name('admin.stamp_correction_request.list');
 });
 
 // 勤怠詳細ページ用ルート
 Route::get('attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');
 
 // 管理者用の承認申請ページ
-Route::get('/admin/stamp_correction_request/approve/{id}', [StampCorrectionRequestController::class, 'approve'])
-    ->name('stamp_correction_request.approve');
+// 管理者用の承認申請ページ
+Route::middleware('auth:admin')->prefix('admin')->group(function () {
+    // 承認申請のルート
+    Route::get('stamp_correction_request/approve/{id}', [StampCorrectionRequestController::class, 'approve'])
+        ->name('admin.stamp_correction_request.approve'); // admin プレフィックスで定義
+});
 
 // 承認の処理を行うためのPATCHメソッド
 Route::patch('/admin/stamp_correction_request/approve/{id}', [StampCorrectionRequestController::class, 'approveSubmit'])

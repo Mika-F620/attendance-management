@@ -5,10 +5,21 @@
 @section('menu')
   <nav class="header__nav">
     <ul class="header__menu">
-      <li class="header__list"><a class="header__link" href="#">勤怠</a></li>
-      <li class="header__list"><a class="header__link" href="#">勤怠一覧</a></li>
-      <li class="header__list"><a class="header__link" href="#">申請</a></li>
-      <li class="header__list"><a class="header__link" href="#">ログアウト</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('admin.stamp_correction_request.list') }}">申請一覧</a></li>
+      @if (Auth::check())  <!-- ユーザーか管理者がログインしているか確認 -->
+        <li class="header__list">
+          <form action="{{ route('admin.logout') }}" method="POST">
+          @csrf
+            <button class="header__link">ログアウト</button>
+          </form>
+        </li>
+      @else
+        <li class="header__list">
+            <a class="header__link" href="{{ route('admin.login') }}">ログイン</a>
+        </li>
+      @endif
     </ul>
   </nav>
 @endsection
@@ -16,7 +27,7 @@
   <section class="attendanceShow grayBg">
     <div class="attendanceShow__contents wrapper">
       <h2 class="pageTitle">勤怠詳細</h2>
-      <form class="attendanceShow__details" method="POST" action="{{ route('stamp_correction_request.approve', $attendance->id) }}">
+      <form class="attendanceShow__details" method="POST" action="{{ route('admin.stamp_correction_request.approve', $attendance->id) }}">
         @csrf
         @method('PATCH') <!-- PATCHメソッドを指定 -->
         <div class="attendanceShow__formContents">

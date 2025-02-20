@@ -126,27 +126,22 @@ public function list(Request $request)
     // URLパラメータから月を取得、指定がなければ現在の月
     $month = $request->input('month', Carbon::now()->format('Y-m'));
 
-    // 月ごとに勤怠情報を取得
-    $attendances = Attendance::whereMonth('date', Carbon::parse($month)->month)
-                            ->whereYear('date', Carbon::parse($month)->year)
-                            ->orderBy('date', 'desc')
-                            ->paginate(10);
+    // 一般ユーザーの場合、ログイン中のユーザーの勤怠情報のみを取得
+    if (!Auth::guard('admin')->check()) {
+        $attendances = Attendance::where('user_id', Auth::id())  // ログイン中のユーザーの勤怠情報を取得
+            ->whereMonth('date', Carbon::parse($month)->month)
+            ->whereYear('date', Carbon::parse($month)->year)
+            ->orderBy('date', 'desc')
+            ->paginate(10);
+    } else {
+        // 管理者の場合、全ユーザーの勤怠情報を取得
+        $attendances = Attendance::whereMonth('date', Carbon::parse($month)->month)
+            ->whereYear('date', Carbon::parse($month)->year)
+            ->orderBy('date', 'desc')
+            ->paginate(10);
+    }
 
-    // ビューにデータを渡して表示
     return view('attendance.list', compact('attendances', 'month'));
-
-    // 月ごとに勤怠情報を取得
-    $attendances = Attendance::where('user_id', Auth::id())
-        ->whereMonth('date', Carbon::parse($month)->month)  // 月をフィルター
-        ->whereYear('date', Carbon::parse($month)->year)   // 年をフィルター
-        ->orderBy('date', 'desc')  // 日付順に並べる（降順）
-        ->paginate(10);  // 1ページ10件に分けて表示
-
-    // 選択した月をビューに渡す
-    return view('attendance.list', [
-        'attendances' => $attendances,
-        'month' => $month
-    ]);
 }
 
 

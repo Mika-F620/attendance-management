@@ -45,18 +45,15 @@ class StampCorrectionRequestController extends Controller
     // }
 
     public function approve($id)
-{
-    // 勤怠申請をIDで取得
-    $attendance = Attendance::findOrFail($id);
-
-    // 申請がすでに承認済みの場合はリダイレクト
-    if ($attendance->approval_status == '承認済み') {
-        return redirect()->route('stamp_correction_request.list')->with('error', 'この申請は既に承認されています');
+    {
+        // 勤怠申請をIDで取得
+        $attendance = Attendance::findOrFail($id);
+    
+        // 承認済みの場合も詳細を表示したい場合
+        return view('stamp_correction_request.approve.show', compact('attendance'));
     }
+    
 
-    // 承認待ちのデータをビューに渡す
-    return view('stamp_correction_request.approve.show', compact('attendance'));
-}
 
 public function approveSubmit(Request $request, $id)
 {

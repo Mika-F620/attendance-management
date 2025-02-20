@@ -5,17 +5,25 @@
 @section('menu')
   <nav class="header__nav">
     <ul class="header__menu">
+    @if (Request::is('admin*')) <!-- URLに/adminが含まれているかを確認 -->
+      <!-- 管理者用のメニュー -->
+      <li class="header__list"><a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('admin.stamp_correction_request.list') }}">申請一覧</a></li>
+    @else
+      <!-- 一般ユーザー用のメニュー -->
       <li class="header__list"><a class="header__link" href="{{ route('attendance') }}">勤怠</a></li>
       <li class="header__list"><a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a></li>
       <li class="header__list"><a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a></li>
+    @endif
+
       <li class="header__list">
         @if (Auth::check())
-          <form class="" action="/logout" method="post">
+          <form action="{{ route(Auth::user()->is_admin ? 'admin.logout' : 'logout') }}" method="POST">
             @csrf
             <button class="header__link">ログアウト</button>
           </form>
-          @else
-          <!-- ログインしていない場合、ログインボタンを表示 -->
+        @else
           <a class="header__link" href="{{ route('login') }}">ログイン</a>
         @endif
       </li>
@@ -49,7 +57,7 @@
               <td class="requestList__detail">{{ \Carbon\Carbon::parse($attendance->date)->format('Y/m/d') }}</td>
               <td class="requestList__detail">{{ $attendance->remarks }}</td>
               <td class="requestList__detail">{{ $attendance->created_at ? $attendance->created_at->format('Y/m/d') : '-' }}</td>
-              <td class="requestList__detail"><a href="{{ route('attendance.show', $attendance->id) }}">詳細</a></td>
+              <td class="requestList__detail"><a href="{{ route('admin.stamp_correction_request.approve', $attendance->id) }}">詳細</a></td>
             </tr>
           @endforeach
         </table>
@@ -73,7 +81,7 @@
               <td class="requestList__detail">{{ \Carbon\Carbon::parse($attendance->date)->format('Y/m/d') }}</td>
               <td class="requestList__detail">{{ $attendance->remarks }}</td>
               <td class="requestList__detail">{{ $attendance->created_at ? $attendance->created_at->format('Y/m/d') : '-' }}</td>
-              <td class="requestList__detail"><a href="{{ route('attendance.show', $attendance->id) }}">詳細</a></td>
+              <td class="requestList__detail"><a href="{{ route('admin.stamp_correction_request.approve', $attendance->id) }}">詳細</a></td>
             </tr>
           @endforeach
         </table>

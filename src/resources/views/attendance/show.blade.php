@@ -5,20 +5,29 @@
 @section('menu')
   <nav class="header__nav">
     <ul class="header__menu">
-      <li class="header__list"><a class="header__link" href="{{ route('attendance') }}">勤怠</a></li>
-      <li class="header__list"><a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a></li>
-      <li class="header__list"><a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a></li>
-      <li class="header__list">
-        @if (Auth::check())
-          <form class="" action="/logout" method="post">
-            @csrf
-            <button class="header__link">ログアウト</button>
-          </form>
-        @else
-          <!-- ログインしていない場合、ログインボタンを表示 -->
-          <a class="header__link" href="{{ route('login') }}">ログイン</a>
-        @endif
-      </li>
+    @if (Auth::guard('admin')->check()) <!-- 管理者ログインの判定 -->
+    <!-- 管理者用のメニュー -->
+    <li class="header__list"><a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
+    <li class="header__list"><a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
+    <li class="header__list"><a class="header__link" href="{{ route('admin.stamp_correction_request.list') }}">申請一覧</a></li>
+  @elseif (Auth::check()) <!-- 一般ユーザーログインの判定 -->
+    <!-- 一般ユーザー用のメニュー -->
+    <li class="header__list"><a class="header__link" href="{{ route('attendance') }}">勤怠</a></li>
+    <li class="header__list"><a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a></li>
+    <li class="header__list"><a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a></li>
+  @endif
+  <!-- ログインしている場合はログアウトボタンを表示 -->
+  @if (Auth::guard('admin')->check() || Auth::check())
+    <li class="header__list">
+      <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button class="header__link">ログアウト</button>
+      </form>
+    </li>
+  @else
+    <!-- ログインしていない場合はログインボタンを表示 -->
+    <li class="header__list"><a class="header__link" href="{{ route('login') }}">ログイン</a></li>
+  @endif
     </ul>
   </nav>
 @endsection
@@ -83,12 +92,16 @@
             @enderror
           </div>
         </div>
-        @if ($attendance->approval_status == '承認待ち')
-          <!-- 承認待ちの場合 -->
-          <p class="attendanceShow__error" style="color: red;">*承認待ちのため修正はできません。</p>
-        @else
-          <!-- 承認済みの場合 -->
+        <!-- 修正ボタンの表示条件 -->
+        @if (Auth::guard('admin')->check())
+          <!-- 管理者の場合、承認待ちでも承認済みでも修正可能 -->
           <input class="blackBtn attendanceShow__btn" type="submit" value="修正" />
+        @elseif (Auth::check() && $attendance->approval_status == '承認済み')
+          <!-- 一般ユーザーで承認済みの場合のみ修正可能 -->
+          <input class="blackBtn attendanceShow__btn" type="submit" value="修正" />
+        @else
+          <!-- 承認待ちの場合は修正不可 -->
+          <p class="attendanceShow__error" style="color: red;">*承認待ちのため修正はできません。</p>
         @endif
       </form>
     </div>
