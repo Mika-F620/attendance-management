@@ -5,9 +5,9 @@
 @section('menu')
   <nav class="header__nav">
     <ul class="header__menu">
-      <li class="header__list"><a class="header__link" href="#">勤怠</a></li>
-      <li class="header__list"><a class="header__link" href="#">勤怠一覧</a></li>
-      <li class="header__list"><a class="header__link" href="#">申請</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('attendance') }}">勤怠</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a></li>
+      <li class="header__list"><a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a></li>
       <li class="header__list">
         @if (Auth::check())
         <form class="" action="/logout" method="post">
