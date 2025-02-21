@@ -126,6 +126,4 @@ class RegisterTest extends TestCase
         $user = \App\Models\User::where('email', 'test@example.com')->first();
         $this->assertNotEquals('password123', $user->password);  // ハッシュ化されていることを確認
     }
-
-
 }

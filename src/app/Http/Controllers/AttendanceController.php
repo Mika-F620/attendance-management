@@ -10,61 +10,55 @@ use Carbon\Carbon;  // Carbonを使って日付と時間を操作します
 
 class AttendanceController extends Controller
 {
-  public function show()
-{
-    // 現在の日付と時間を取得
-    $today = Carbon::now();
+    public function show()
+    {
+        // 現在の日付と時間を取得
+        $today = Carbon::now();
 
-    // 日本語ロケールを設定
-    $today->locale('ja');  // 日本語ロケールを設定して、日本語の曜日を取得
+        // 日本語ロケールを設定
+        $today->locale('ja');  // 日本語ロケールを設定して、日本語の曜日を取得
 
-    // 日本語の曜日を表示
-    $weekday = $today->isoFormat('ddd');  // 日本語の曜日を完全に取得（例: 月曜日）
+        // 日本語の曜日を表示
+        $weekday = $today->isoFormat('ddd');  // 日本語の曜日を完全に取得（例: 月曜日）
 
-    // ステータスの取得（デフォルト: 勤務外）
-    $status = '勤務外';  // 初期状態は勤務外に設定
-    $attendance = Attendance::where('user_id', Auth::id())
-                             ->where('date', $today->format('Y-m-d'))
-                             ->first();
+        // ステータスの取得（デフォルト: 勤務外）
+        $status = '勤務外';  // 初期状態は勤務外に設定
+        $attendance = Attendance::where('user_id', Auth::id())
+                                ->where('date', $today->format('Y-m-d'))
+                                ->first();
 
-    if ($attendance) {
-        $status = $attendance->status;  // データベースのステータスを使用
+        if ($attendance) {
+            $status = $attendance->status;  // データベースのステータスを使用
+        }
+
+        return view('attendance', ['today' => $today, 'weekday' => $weekday, 'status' => $status]);  // ビューに渡す
     }
 
-    return view('attendance', ['today' => $today, 'weekday' => $weekday, 'status' => $status]);  // ビューに渡す
-}
+    // 出勤処理
+    public function startWork(Request $request)
+    {
+        // すでに出勤情報がある場合は処理をスキップ
+        $existingAttendance = Attendance::where('user_id', Auth::id())
+                                        ->where('date', now()->format('Y-m-d'))
+                                        ->first();
 
+        if ($existingAttendance) {
+            return redirect()->route('attendance')->with('status', '出勤中');
+        }
 
+        // 出勤時刻を保存
+        $attendance = new Attendance();
+        $attendance->user_id = Auth::id();
+        $attendance->date = now()->format('Y-m-d');
+        $attendance->start_time = now()->format('H:i'); // 現在の時刻を出勤時刻として保存
+        $attendance->status = '出勤中';  // ステータスを「出勤中」に設定
+        $attendance->save();
 
-
-  // 出勤処理
-  public function startWork(Request $request)
-{
-    // すでに出勤情報がある場合は処理をスキップ
-    $existingAttendance = Attendance::where('user_id', Auth::id())
-                                      ->where('date', now()->format('Y-m-d'))
-                                      ->first();
-
-    if ($existingAttendance) {
         return redirect()->route('attendance')->with('status', '出勤中');
     }
 
-    // 出勤時刻を保存
-    $attendance = new Attendance();
-    $attendance->user_id = Auth::id();
-    $attendance->date = now()->format('Y-m-d');
-    $attendance->start_time = now()->format('H:i'); // 現在の時刻を出勤時刻として保存
-    $attendance->status = '出勤中';  // ステータスを「出勤中」に設定
-    $attendance->save();
-
-    return redirect()->route('attendance')->with('status', '出勤中');
-}
-
-
-
-
-  // 休憩入処理
-  public function startRest(Request $request)
+    // 休憩入処理
+    public function startRest(Request $request)
     {
         $attendance = Attendance::where('user_id', Auth::id())
                                 ->where('date', now()->format('Y-m-d'))
@@ -101,71 +95,60 @@ class AttendanceController extends Controller
         return redirect()->route('attendance')->with('status', '休憩中ではありません');
     }
 
-  // 退勤処理
-  public function endWork(Request $request)
-{
-    $attendance = Attendance::where('user_id', Auth::id())
-                            ->where('date', now()->format('Y-m-d'))
-                            ->first();
+    // 退勤処理
+    public function endWork(Request $request)
+    {
+        $attendance = Attendance::where('user_id', Auth::id())
+                                ->where('date', now()->format('Y-m-d'))
+                                ->first();
 
-    // 退勤する条件を満たしている場合
-    if ($attendance && $attendance->status == '出勤中') {
-        $attendance->status = '退勤済';  // ステータスを「退勤済」に変更
-        $attendance->end_time = now()->format('H:i');  // 退勤時間を保存
-        $attendance->save();
+        // 退勤する条件を満たしている場合
+        if ($attendance && $attendance->status == '出勤中') {
+            $attendance->status = '退勤済';  // ステータスを「退勤済」に変更
+            $attendance->end_time = now()->format('H:i');  // 退勤時間を保存
+            $attendance->save();
 
-        // リダイレクト先のビューで表示を更新
-        return redirect()->route('attendance')->with('status', '退勤済');
+            // リダイレクト先のビューで表示を更新
+            return redirect()->route('attendance')->with('status', '退勤済');
+        }
+
+        return redirect()->route('attendance')->with('status', '休憩中か出勤していません');
     }
 
-    return redirect()->route('attendance')->with('status', '休憩中か出勤していません');
-}
+    public function list(Request $request)
+    {
+        // URLパラメータから月を取得、指定がなければ現在の月
+        $month = $request->input('month', Carbon::now()->format('Y-m'));
 
-public function list(Request $request)
-{
-    // URLパラメータから月を取得、指定がなければ現在の月
-    $month = $request->input('month', Carbon::now()->format('Y-m'));
+        // 一般ユーザーの場合、ログイン中のユーザーの勤怠情報のみを取得
+        if (!Auth::guard('admin')->check()) {
+            $attendances = Attendance::where('user_id', Auth::id())  // ログイン中のユーザーの勤怠情報を取得
+                ->whereMonth('date', Carbon::parse($month)->month)
+                ->whereYear('date', Carbon::parse($month)->year)
+                ->orderBy('date', 'desc')
+                ->paginate(10);
+        } else {
+            // 管理者の場合、全ユーザーの勤怠情報を取得
+            $attendances = Attendance::whereMonth('date', Carbon::parse($month)->month)
+                ->whereYear('date', Carbon::parse($month)->year)
+                ->orderBy('date', 'desc')
+                ->paginate(10);
+        }
 
-    // 一般ユーザーの場合、ログイン中のユーザーの勤怠情報のみを取得
-    if (!Auth::guard('admin')->check()) {
-        $attendances = Attendance::where('user_id', Auth::id())  // ログイン中のユーザーの勤怠情報を取得
-            ->whereMonth('date', Carbon::parse($month)->month)
-            ->whereYear('date', Carbon::parse($month)->year)
-            ->orderBy('date', 'desc')
-            ->paginate(10);
-    } else {
-        // 管理者の場合、全ユーザーの勤怠情報を取得
-        $attendances = Attendance::whereMonth('date', Carbon::parse($month)->month)
-            ->whereYear('date', Carbon::parse($month)->year)
-            ->orderBy('date', 'desc')
-            ->paginate(10);
+        return view('attendance.list', compact('attendances', 'month'));
     }
 
-    return view('attendance.list', compact('attendances', 'month'));
-}
+    public function showDetail($id)
+    {
+        // 勤怠の詳細情報を取得
+        $attendance = Attendance::where('id', $id) // ユーザーIDでフィルタリングする必要はない場合もあります
+                                ->firstOrFail(); // 存在しない場合は404エラー
+
+        return view('attendance.show', compact('attendance'));  // ビューにデータを渡す
+    }
 
 
-// public function showDetail($id)
-// {
-//     // 勤怠の詳細情報を取得
-//     $attendance = Attendance::where('user_id', Auth::id())  // ログイン中のユーザーに絞る
-//                             ->where('id', $id)  // 勤怠のIDを指定
-//                             ->firstOrFail();  // 存在しない場合は404エラー
-
-//     return view('attendance.show', compact('attendance'));  // ビューにデータを渡す
-// }
-
-public function showDetail($id)
-{
-    // 勤怠の詳細情報を取得
-    $attendance = Attendance::where('id', $id) // ユーザーIDでフィルタリングする必要はない場合もあります
-                            ->firstOrFail(); // 存在しない場合は404エラー
-
-    return view('attendance.show', compact('attendance'));  // ビューにデータを渡す
-}
-
-
-public function update(UpdateAttendanceRequest $request, $id)
+    public function update(UpdateAttendanceRequest $request, $id)
     {
         // フォームリクエストでバリデーションが行われた後、処理が進みます
 
@@ -204,5 +187,4 @@ public function update(UpdateAttendanceRequest $request, $id)
         // 更新後、勤怠詳細ページへリダイレクト
         return redirect()->route('attendance.show', $attendance->id)->with('status', '勤怠情報が更新されました');
     }
-
 }

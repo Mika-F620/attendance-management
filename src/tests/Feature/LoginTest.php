@@ -16,15 +16,15 @@ class LoginTest extends TestCase
   {
     // 1. ユーザーを登録する
     $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => bcrypt('password123'),
+      'name' => 'Test User',
+      'email' => 'test@example.com',
+      'password' => bcrypt('password123'),
     ]);
 
     // 2. メールアドレス以外のユーザー情報を入力する
     $data = [
-        'login_identifier' => '', // メールアドレスを空に設定
-        'password' => 'password123',
+      'login_identifier' => '', // メールアドレスを空に設定
+      'password' => 'password123',
     ];
 
     // 3. ログインの処理を行う
@@ -39,15 +39,15 @@ class LoginTest extends TestCase
   {
     // 1. ユーザーを登録する
     $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => bcrypt('password123'),  // ユーザー登録時にはパスワードを設定
+      'name' => 'Test User',
+      'email' => 'test@example.com',
+      'password' => bcrypt('password123'),  // ユーザー登録時にはパスワードを設定
     ]);
 
     // 2. パスワード以外のユーザー情報を入力する
     $data = [
-        'login_identifier' => $user->email,  // メールアドレスは入力
-        'password' => '',  // パスワードは空にする
+      'login_identifier' => $user->email,  // メールアドレスは入力
+      'password' => '',  // パスワードは空にする
     ];
 
     // 3. ログインの処理を行う
@@ -62,15 +62,15 @@ class LoginTest extends TestCase
   {
     // 1. ユーザーを登録する
     $user = User::create([
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => bcrypt('password123'),  // ユーザー登録時にはパスワードを設定
+      'name' => 'Test User',
+      'email' => 'test@example.com',
+      'password' => bcrypt('password123'),  // ユーザー登録時にはパスワードを設定
     ]);
 
     // 2. 誤ったメールアドレスのユーザー情報を入力する
     $data = [
-        'login_identifier' => 'wrong@example.com',  // 誤ったメールアドレス
-        'password' => 'password123',  // 正しいパスワード
+      'login_identifier' => 'wrong@example.com',  // 誤ったメールアドレス
+      'password' => 'password123',  // 正しいパスワード
     ];
 
     // 3. ログインの処理を行う

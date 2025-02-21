@@ -74,11 +74,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,  // Adminモデルを使う
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

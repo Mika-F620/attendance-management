@@ -5,18 +5,17 @@
 @section('menu')
   <nav class="header__nav">
     <ul class="header__menu">
-    @if (Request::is('admin*')) <!-- URLに/adminが含まれているかを確認 -->
-      <!-- 管理者用のメニュー -->
-      <li class="header__list"><a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
-      <li class="header__list"><a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
-      <li class="header__list"><a class="header__link" href="{{ route('admin.stamp_correction_request.list') }}">申請一覧</a></li>
-    @else
-      <!-- 一般ユーザー用のメニュー -->
-      <li class="header__list"><a class="header__link" href="{{ route('attendance') }}">勤怠</a></li>
-      <li class="header__list"><a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a></li>
-      <li class="header__list"><a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a></li>
-    @endif
-
+      @if (Request::is('admin*')) <!-- URLに/adminが含まれているかを確認 -->
+        <!-- 管理者用のメニュー -->
+        <li class="header__list"><a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
+        <li class="header__list"><a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
+        <li class="header__list"><a class="header__link" href="{{ route('admin.stamp_correction_request.list') }}">申請一覧</a></li>
+      @else
+        <!-- 一般ユーザー用のメニュー -->
+        <li class="header__list"><a class="header__link" href="{{ route('attendance') }}">勤怠</a></li>
+        <li class="header__list"><a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a></li>
+        <li class="header__list"><a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a></li>
+      @endif
       <li class="header__list">
         @if (Auth::check())
           <form action="{{ route(Auth::user()->is_admin ? 'admin.logout' : 'logout') }}" method="POST">

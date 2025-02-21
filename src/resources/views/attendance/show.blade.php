@@ -5,29 +5,29 @@
 @section('menu')
   <nav class="header__nav">
     <ul class="header__menu">
-    @if (Auth::guard('admin')->check()) <!-- 管理者ログインの判定 -->
-    <!-- 管理者用のメニュー -->
-    <li class="header__list"><a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
-    <li class="header__list"><a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
-    <li class="header__list"><a class="header__link" href="{{ route('admin.stamp_correction_request.list') }}">申請一覧</a></li>
-  @elseif (Auth::check()) <!-- 一般ユーザーログインの判定 -->
-    <!-- 一般ユーザー用のメニュー -->
-    <li class="header__list"><a class="header__link" href="{{ route('attendance') }}">勤怠</a></li>
-    <li class="header__list"><a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a></li>
-    <li class="header__list"><a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a></li>
-  @endif
-  <!-- ログインしている場合はログアウトボタンを表示 -->
-  @if (Auth::guard('admin')->check() || Auth::check())
-    <li class="header__list">
-      <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button class="header__link">ログアウト</button>
-      </form>
-    </li>
-  @else
-    <!-- ログインしていない場合はログインボタンを表示 -->
-    <li class="header__list"><a class="header__link" href="{{ route('login') }}">ログイン</a></li>
-  @endif
+      @if (Auth::guard('admin')->check()) <!-- 管理者ログインの判定 -->
+        <!-- 管理者用のメニュー -->
+        <li class="header__list"><a class="header__link" href="{{ route('admin.attendance.list') }}">勤怠一覧</a></li>
+        <li class="header__list"><a class="header__link" href="{{ route('admin.staff.list') }}">スタッフ一覧</a></li>
+        <li class="header__list"><a class="header__link" href="{{ route('admin.stamp_correction_request.list') }}">申請一覧</a></li>
+      @elseif (Auth::check()) <!-- 一般ユーザーログインの判定 -->
+        <!-- 一般ユーザー用のメニュー -->
+        <li class="header__list"><a class="header__link" href="{{ route('attendance') }}">勤怠</a></li>
+        <li class="header__list"><a class="header__link" href="{{ route('attendance.list') }}">勤怠一覧</a></li>
+        <li class="header__list"><a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a></li>
+      @endif
+      <!-- ログインしている場合はログアウトボタンを表示 -->
+      @if (Auth::guard('admin')->check() || Auth::check())
+        <li class="header__list">
+          <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button class="header__link">ログアウト</button>
+          </form>
+        </li>
+      @else
+        <!-- ログインしていない場合はログインボタンを表示 -->
+        <li class="header__list"><a class="header__link" href="{{ route('login') }}">ログイン</a></li>
+      @endif
     </ul>
   </nav>
 @endsection
@@ -106,5 +106,4 @@
       </form>
     </div>
   </section>
-
 @endsection

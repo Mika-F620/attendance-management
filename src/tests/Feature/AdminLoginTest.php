@@ -55,28 +55,4 @@ class AdminLoginTest extends TestCase
     // 4. バリデーションエラーメッセージが表示されることを確認
     $response->assertSessionHasErrors('password');  // パスワードに関するエラーメッセージが表示されることを確認
   }
-
-  // 登録内容と一致しない場合、バリデーションメッセージが表示される
-  // public function test_admin_login_fails_with_incorrect_email()
-  //   {
-  //       // 1. ユーザーを登録する
-  //       $user = User::create([
-  //           'name' => 'Test Admin',
-  //           'email' => 'admin@example.com',
-  //           'password' => bcrypt('password123'),
-  //           'role' => 'admin'
-  //       ]);
-
-  //       // 2. 誤ったメールアドレスのユーザー情報を入力する
-  //       $data = [
-  //           'email' => 'incorrect@example.com', // 正しいメールアドレスではなく、誤ったものを指定
-  //           'password' => 'password123'
-  //       ];
-
-  //       // 3. ログインの処理を行う
-  //       $response = $this->post(route('admin.login'), $data);
-
-  //       // 4. バリデーションエラーメッセージが表示されることを確認
-  //       $response->assertSessionHasErrors('email');  // 'email'フィールドにエラーが表示されることを確認
-  //   }
 }

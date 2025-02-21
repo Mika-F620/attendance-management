@@ -10,13 +10,13 @@
       <li class="header__list"><a class="header__link" href="{{ route('stamp_correction_request.list') }}">申請</a></li>
       <li class="header__list">
         @if (Auth::check())
-        <form class="" action="/logout" method="post">
-          @csrf
-          <button class="header__link">ログアウト</button>
-        </form>
+          <form class="" action="/logout" method="post">
+            @csrf
+            <button class="header__link">ログアウト</button>
+          </form>
         @else
-        <!-- ログインしていない場合、ログインボタンを表示 -->
-        <a class="header__link" href="{{ route('login') }}">ログイン</a>
+          <!-- ログインしていない場合、ログインボタンを表示 -->
+          <a class="header__link" href="{{ route('login') }}">ログイン</a>
         @endif
       </li>
     </ul>
