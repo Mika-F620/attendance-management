@@ -86,3 +86,8 @@
 .attendanceList__detail:last-child {
   color: #000000;
 }
+
+.attendanceList__csv {
+  display: block;
+  margin-bottom: 20px;
+}

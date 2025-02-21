@@ -28,7 +28,7 @@
     <div class="attendanceList wrapper">
       <h2 class="pageTitle">{{ $staff->name }}さんの勤怠</h2>
       <!-- CSV出力ボタン -->
-      <a href="{{ route('admin.staff.exportCsv', ['staffId' => $staff->id]) }}?month={{ $month }}" class="btn btn-primary" style="margin-bottom: 15px;">CSV出力</a>
+      <a class="attendanceList__csv" href="{{ route('admin.staff.exportCsv', ['staffId' => $staff->id]) }}?month={{ $month }}" class="btn btn-primary" style="margin-bottom: 15px;">CSV出力</a>
       <div class="attendanceList__pagination">
         <!-- 前月のリンク -->
         <form action="{{ route('attendance.list') }}" method="GET" style="display: inline;">
@@ -78,7 +78,7 @@
                 -
               @endif
             </td>
-            <td class="attendanceList__detail">詳細</td>
+            <td class="attendanceList__detail"><a href="{{ route('attendance.show', $attendance->id) }}">詳細</a></td>
           </tr>
         @endforeach
       </table>
