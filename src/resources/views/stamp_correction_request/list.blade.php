@@ -56,7 +56,13 @@
               <td class="requestList__detail">{{ \Carbon\Carbon::parse($attendance->date)->format('Y/m/d') }}</td>
               <td class="requestList__detail">{{ $attendance->remarks }}</td>
               <td class="requestList__detail">{{ $attendance->created_at ? $attendance->created_at->format('Y/m/d') : '-' }}</td>
-              <td class="requestList__detail"><a href="{{ route('admin.stamp_correction_request.approve', $attendance->id) }}">詳細</a></td>
+              <td class="requestList__detail">
+                @if (Auth::guard('admin')->check()) <!-- 管理者の場合 -->
+                  <a href="{{ route('admin.stamp_correction_request.approve', $attendance->id) }}">詳細</a>
+                @else <!-- 一般ユーザーの場合 -->
+                  <a href="{{ route('attendance.show', $attendance->id) }}">詳細</a>
+                @endif
+              </td>
             </tr>
           @endforeach
         </table>
@@ -80,7 +86,14 @@
               <td class="requestList__detail">{{ \Carbon\Carbon::parse($attendance->date)->format('Y/m/d') }}</td>
               <td class="requestList__detail">{{ $attendance->remarks }}</td>
               <td class="requestList__detail">{{ $attendance->created_at ? $attendance->created_at->format('Y/m/d') : '-' }}</td>
-              <td class="requestList__detail"><a href="{{ route('admin.stamp_correction_request.approve', $attendance->id) }}">詳細</a></td>
+              <td class="requestList__detail">
+                <!-- 一般ユーザーの場合にリンクを修正 -->
+                @if (Auth::guard('admin')->check()) <!-- 管理者の場合 -->
+                  <a href="{{ route('admin.stamp_correction_request.approve', $attendance->id) }}">詳細</a>
+                @else <!-- 一般ユーザーの場合 -->
+                  <a href="{{ route('attendance.show', $attendance->id) }}">詳細</a>
+                @endif
+              </td>
             </tr>
           @endforeach
         </table>

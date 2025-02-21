@@ -120,11 +120,13 @@ Route::middleware('auth:admin')->group(function() {
 // 勤怠詳細ページ用ルート
 Route::get('attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');
 
+// 一般ユーザー用の勤怠詳細ページのルート
+Route::middleware(['auth'])->get('/attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');
+
 // 管理者用の承認申請ページ
 Route::middleware('auth:admin')->prefix('admin')->group(function () {
-    // 承認申請のルート
     Route::get('stamp_correction_request/approve/{id}', [StampCorrectionRequestController::class, 'approve'])
-        ->name('admin.stamp_correction_request.approve'); // admin プレフィックスで定義
+        ->name('admin.stamp_correction_request.approve');
 });
 
 // 承認の処理を行うためのPATCHメソッド
