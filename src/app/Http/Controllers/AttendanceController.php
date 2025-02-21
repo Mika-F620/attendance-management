@@ -140,13 +140,20 @@ class AttendanceController extends Controller
 
     public function showDetail($id)
     {
-        // 勤怠の詳細情報を取得
-        $attendance = Attendance::where('id', $id) // ユーザーIDでフィルタリングする必要はない場合もあります
-                                ->firstOrFail(); // 存在しない場合は404エラー
+        // 管理者がログインしている場合は、user_idに関係なく全ての勤怠情報を表示
+        if (Auth::guard('admin')->check()) {
+            // 管理者用：全員の勤怠情報を表示
+            $attendance = Attendance::findOrFail($id);
+        } else {
+            // 一般ユーザー用：自分の勤怠情報のみ表示
+            $attendance = Attendance::where('user_id', Auth::id())
+                                    ->where('id', $id)
+                                    ->firstOrFail();  // 存在しない場合は404エラー
+        }
 
-        return view('attendance.show', compact('attendance'));  // ビューにデータを渡す
+        // 勤怠情報をビューに渡す
+        return view('attendance.show', compact('attendance'));
     }
-
 
     public function update(UpdateAttendanceRequest $request, $id)
     {

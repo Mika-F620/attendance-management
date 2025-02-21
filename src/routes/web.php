@@ -120,8 +120,13 @@ Route::middleware('auth:admin')->group(function() {
 // 勤怠詳細ページ用ルート
 Route::get('attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');
 
-// 一般ユーザー用の勤怠詳細ページのルート
-Route::middleware(['auth'])->get('/attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');
+// 管理者用の勤怠詳細ページルート
+Route::middleware('auth:admin')->prefix('admin')->group(function () {
+    Route::get('attendance/{id}', [AttendanceController::class, 'showDetail'])->name('admin.attendance.show');
+});
+
+// 一般ユーザー用の勤怠詳細ページルート
+Route::middleware('auth')->get('/attendance/{id}', [AttendanceController::class, 'showDetail'])->name('attendance.show');
 
 // 管理者用の承認申請ページ
 Route::middleware('auth:admin')->prefix('admin')->group(function () {

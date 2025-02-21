@@ -76,7 +76,14 @@
                 -
               @endif
             </td>
-            <td class="attendanceList__detail"><a href="{{ route('attendance.show', $attendance->id) }}">詳細</a></td>
+            <td class="attendanceList__detail">
+              <!-- 一般ユーザーの場合、他のユーザーの詳細は表示しない -->
+              @if (Auth::guard('admin')->check())
+                <a href="{{ route('admin.attendance.show', $attendance->id) }}">詳細</a>
+              @else
+                <a href="{{ route('attendance.show', $attendance->id) }}">詳細</a>
+              @endif
+            </td>
           </tr>
         @endforeach
       </table>
