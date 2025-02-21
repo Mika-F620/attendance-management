@@ -50,3 +50,8 @@ MySQL10.3.39
 開発環境：http://localhost/  
 phpMyAdmin:http://localhost:8080/  
 MailHog:http://localhost:8025/
+
+## アカウント情報
+管理者アカウント  
+メールアドレス：admin@example.com  
+パスワード：password123
